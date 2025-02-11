@@ -35,7 +35,7 @@ async function getStatus(): Promise<"operational" | "downtime" | "degraded" | "m
   try {
     const host = headers().get("host");
     const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
-    const response = await fetch(`${protocol}://${host}/api/test`, {
+    const response = await fetch(`${protocol}://${host}/api/status`, {
       cache: "no-store",
     });
     const data = await response.json();
