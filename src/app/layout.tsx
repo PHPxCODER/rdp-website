@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { ThemeProvider } from "@/components/theme-provider"
-import {NextUIProvider} from "@nextui-org/react";
+import {HeroUIProvider} from "@heroui/react";
 import { SiteHeader } from "@/components/site-header";
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <NextUIProvider>
+        <HeroUIProvider>
         <ThemeProvider attribute="class" defaultTheme="dark" disableTransitionOnChange>
           <div className="relative flex w-full flex-col items-center justify-center pb-0">
             <SiteHeader />
@@ -41,7 +41,7 @@ export default function RootLayout({
             <Footer/>
           <Analytics/>
           <SpeedInsights/>
-        </ThemeProvider></NextUIProvider>
+        </ThemeProvider></HeroUIProvider>
       </body>
     </html>
   );
