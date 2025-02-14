@@ -1,10 +1,23 @@
-import nextra from 'nextra'
- 
-const withNextra = nextra({
-    
-})
- 
-// You can include other Next.js configuration options here, in addition to Nextra settings:
-export default withNextra({
-  // ... Other Next.js config options
-})
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  eslint: {
+  },
+  images: {
+      remotePatterns: [
+        {
+          protocol: 'https',
+          hostname: 'lh3.googleusercontent.com',
+          port: '',
+          pathname: '/a/**',
+        },
+        {
+          protocol: 'https',
+          hostname: 'avatars.githubusercontent.com',
+          port: '',
+          pathname: '/u/**',
+        }
+      ],
+    },
+};
+
+export default nextConfig;
