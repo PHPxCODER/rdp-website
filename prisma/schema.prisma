@@ -20,3 +20,122 @@ model Subscriber {
   tokenExpiry DateTime @default(now()) // Set expiry time
   createdAt   DateTime @default(now())
 }
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Category {
+  id        String    @id @default(uuid())
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime @updatedAt
+  Product   Product[]
+}
+
+model Inventory {
+  id        String   @id @default(uuid())
+  productId String   @unique
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Product   Product  @relation(fields: [productId], references: [id])
+}
+
+model Order {
+  id          String      @id @default(uuid())
+  userId      String
+  status      OrderStatus @default(PENDING)
+  totalAmount Float
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime
+  User        User        @relation(fields: [userId], references: [id])
+  OrderItem   OrderItem[]
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  orderId   String
+  productId String
+  quantity  Int
+  price     Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Order     Order    @relation(fields: [orderId], references: [id])
+  Product   Product  @relation(fields: [productId], references: [id])
+}
+
+model Product {
+  id          String      @id @default(uuid())
+  name        String
+  description String
+  price       Float
+  imageUrl    String?
+  sku         String?      @unique
+  categoryId  String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime @updatedAt
+  Inventory   Inventory?
+  OrderItem   OrderItem[]
+  Category    Category?   @relation(fields: [categoryId], references: [id])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  emailVerified DateTime?
+  name          String?
+  phoneNumber   String?   // Add the phone number field here
+  role          Role      @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime @updatedAt
+  Account       Account[]
+  Order         Order[]
+  Session       Session[]
+  image         String?
+}
+
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+enum OrderStatus {  
+  PENDING
+  COMPLETED
+  CANCELED
+}
+
+enum Role {
+  USER
+  MGMT
+  ADMIN
+}
