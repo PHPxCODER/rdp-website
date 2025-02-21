@@ -11,6 +11,7 @@ import { SiteHeader } from "@/components/site-header";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Footer from "@/components/ui/Footer";
+import { ProBanner } from "@/components/pro-banner";
 
 // Import Bahamas as a local font
 const bahamas = localFont({
@@ -39,6 +40,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${bahamas.variable} ${inter.variable} antialiased`}>
+        <ProBanner />
         <HeroUIProvider>
           <ThemeProvider attribute="class" defaultTheme="dark" disableTransitionOnChange>
             <div className="relative flex w-full flex-col items-center justify-center pb-0">
