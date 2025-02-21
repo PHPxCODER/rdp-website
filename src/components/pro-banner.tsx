@@ -57,9 +57,8 @@ export const ProBanner = () => {
       <div className="flex w-full items-center justify-between md:justify-center gap-x-3">
         <a
           className="text-small flex items-end sm:text-[0.93rem] text-foreground hover:opacity-80 transition-opacity"
-          href="https://heroui.pro?utm_source=heroui.com&utm_medium=top-banner"
+          href="/dash"
           rel="noopener noreferrer"
-          target="_blank"
         >
           <span aria-label="rocket" className="hidden md:block" role="img">🚀</span>
           <span className="inline-flex md:ml-1 animate-text-gradient font-medium bg-clip-text text-transparent bg-[linear-gradient(90deg,#D6009A_0%,#8a56cc_50%,#D6009A_100%)] dark:bg-[linear-gradient(90deg,#FFEBF9_0%,#8a56cc_50%,#FFEBF9_100%)]">
