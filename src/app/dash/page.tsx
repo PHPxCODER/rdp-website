@@ -13,9 +13,6 @@ const DashPage = async() => {
   if(!session){
     redirect('/auth')
   }
-  if (!session.user?.name || !session.user?.phone) {
-    redirect("/onboarding"); // Redirect to onboarding if name or phone is missing
-  }
   return (
     <div>
     <h1>Welcome {session.user?.role}<br/>
