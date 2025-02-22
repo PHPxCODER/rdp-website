@@ -5,6 +5,7 @@ import { ArrowLeft, Server, Wifi, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion, Variants } from 'framer-motion';
 import StatusIndicator from "@/components/StatusIndicator";
+import emitter from "@/lib/emitter";
 
 const containerVariants: Variants = {
   hidden: {
@@ -64,8 +65,13 @@ const NotFound = () => {
     fetchStatus();
   }, []);
 
+  useEffect(() => {
+    // Emit event to show ProBanner on 404 page
+    emitter.emit("proBannerForceShow");
+  }, []);
+
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <motion.div
         className="max-w-2xl w-full text-center space-y-8"
         variants={containerVariants}
@@ -138,11 +144,11 @@ const NotFound = () => {
           className="space-y-4"
           variants={itemVariants}
         >
-          <motion.h1 className="text-7xl font-bold text-white">
+          <motion.h1 className="text-7xl font-bold text-foreground">
             404
           </motion.h1>
-          <h2 className="text-2xl font-semibold text-gray-300">Page Not Found</h2>
-          <p className="text-gray-400 max-w-md mx-auto">
+          <h2 className="text-2xl font-semibold text-muted-foreground">Page Not Found</h2>
+          <p className="text-muted-foreground max-w-md mx-auto">
             The requested resource could not be located on our servers.
             Please check the URL or return to the dashboard.
           </p>

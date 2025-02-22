@@ -11,11 +11,20 @@ export const ProBanner = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    const showBannerOn404 = () => setIsVisible(true);
+  
     if (pathname === "/") {
       setIsVisible(true);
     } else {
       setIsVisible(false);
     }
+  
+    // Listen for an event that forces the banner to show (from 404 page)
+    emitter.on("proBannerForceShow", showBannerOn404);
+  
+    return () => {
+      emitter.off("proBannerForceShow", showBannerOn404);
+    };
   }, [pathname]);
 
   const handleScroll = useCallback(() => {
