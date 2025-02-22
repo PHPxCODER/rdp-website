@@ -11,7 +11,7 @@ import { SiteHeader } from "@/components/site-header";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Footer from "@/components/ui/Footer";
-import { ProBanner } from "@/components/pro-banner";
+import { ProBanner } from "@/components/ProBanner";
 
 // Import Bahamas as a local font
 const bahamas = localFont({

@@ -97,13 +97,13 @@ async function StatusIndicator() {
 export default function Footer() {
   return (
     <footer id="footer">
-      <div className="mx-auto max-w-6xl px-3 pb-8 pt-16 sm:pt-24 lg:pt-32">
+      <div className="mx-auto max-w-6xl px-3 pb-8 pt-16 sm:pt-24 lg:pt-32 relative z-10">
         <div className="xl:grid xl:grid-cols-3 xl:gap-20">
           <div className="space-y-8">
             <DatabaseLogo className="w-32 sm:w-40" />
             <p className="text-sm leading-6 text-gray-600 dark:text-gray-400">
-              Redefining the way databases are built and managed. Built in
-              Switzerland, made for the world.
+            Trusted by developers, designed for the future. 
+            Built in India, made for the world.
             </p>
             <div className="flex space-x-6">
               <ThemeSwitch />
