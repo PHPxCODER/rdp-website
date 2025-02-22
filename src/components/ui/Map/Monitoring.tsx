@@ -8,7 +8,7 @@ import {
 } from "@remixicon/react";
 import { SVGMap } from "./SVGMap";
 
-export const Map = () => {
+export const Monitoring = () => {
   return (
     <section
       id="farm-management"

@@ -2,7 +2,7 @@
 import createGlobe from "cobe"
 import { FunctionComponent, useEffect, useRef } from "react"
 
-export const GlobalDatabase: FunctionComponent = () => {
+export const CloudGlobe: FunctionComponent = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
