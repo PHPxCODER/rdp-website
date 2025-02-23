@@ -5,7 +5,13 @@ import { ArrowLeft, Server, Wifi, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion, Variants } from 'framer-motion';
 import StatusIndicator from "@/components/StatusIndicator";
+import GradientBackground from "@/components/ui/GradientBackground";
 import emitter from "@/lib/emitter";
+import { siteConfig } from "@/config/site";
+
+export const metadata = {
+  title: `Page Not Found | ${siteConfig.name}`,
+};
 
 const containerVariants: Variants = {
   hidden: {
@@ -73,11 +79,8 @@ const NotFound = () => {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       {/* Background Gradient */}
-      <div className="pointer-events-none fixed inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/90 to-background" />
-        <div className="absolute right-0 top-0 h-[500px] w-[500px] bg-blue-500/10 blur-[100px]" />
-        <div className="absolute bottom-0 left-0 h-[500px] w-[500px] bg-purple-500/10 blur-[100px]" />
-      </div><div className="relative z-10">
+      <GradientBackground/>
+      <div className="relative z-10">
       <motion.div
         className="max-w-2xl w-full text-center space-y-8"
         variants={containerVariants}
