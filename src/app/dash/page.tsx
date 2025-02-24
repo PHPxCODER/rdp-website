@@ -3,9 +3,10 @@ import Image from "next/image"
 import { getServerSession } from "next-auth/next"
 import { redirect } from "next/navigation"
 import { OPTIONS } from "@/auth.config"
+import { siteConfig }  from '@/config/site'
 
 export const metadata = {
-    title: `Dashboard | `,
+    title: `Dashboard | ${siteConfig.name}`,
   };
 
 const DashPage = async() => {
