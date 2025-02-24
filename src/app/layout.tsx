@@ -43,10 +43,8 @@ export default function RootLayout({
         <ProBanner />
         <HeroUIProvider>
           <ThemeProvider attribute="class" defaultTheme="dark" disableTransitionOnChange>
-            <div className="relative flex w-full flex-col items-center justify-center pb-0">
               <NextTopLoader color="#007BFF" />
               <SiteHeader />
-            </div>
             {children}
             <Footer />
             <Analytics />
