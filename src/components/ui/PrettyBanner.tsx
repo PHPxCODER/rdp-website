@@ -4,7 +4,6 @@ import {Button, Link} from "@heroui/react";
 import {ArrowRightIcon} from "@heroui/shared-icons";
 import {clsx} from "@heroui/shared-utils";
 import NextLink from "next/link";
-import {Code} from "@heroui/react";
 
 import {FeaturesGrid} from "./features-grid";
 
@@ -15,25 +14,25 @@ import {siteConfig} from "@/config/site";
 
 const bannerSuggestions = [
   {
-    title: "Getting Started",
+    title: "Instant Deployments",
     description:
-      "Make beautiful, modern, and fast websites/applications regardless of your design experience.",
+      "Push your code, and we handle the rest. Deploy seamlessly with RDP Datacenter.",
     icon: <GithubIcon className="text-pink-500" />,
-    href: "/ocs/guide/instaldlation",
+    href: "/dash",
   },
   {
-    title: "HeroUI + Next.js",
+    title: "Global Edge Network",
     description: (
       <>
-        HeroUI is fully compatible with the new Next.js <Code>app/</Code> directory structure.
+        Serve your users at lightning speed with our worldwide infrastructure using Edge Network.
       </>
     ),
     icon: <NextJsIcon className="text-pink-500" />,
-    href: "/docs/frameworks/nextjs",
+    href: "/dash",
   },
 ];
 
-export const InstallBanner = () => {
+export const PrettyBanner = () => {
   const isMounted = useIsMounted();
 
   return (
@@ -47,14 +46,14 @@ export const InstallBanner = () => {
       <div className=" w-full max-w-7xl py-10 grid grid-cols-12 gap-6 md:gap-0 z-20">
         <div className="flex flex-col gap-2 col-span-12 md:col-span-6">
           <div className="flex flex-col">
-            <h1 className={title({size: "md", class: "inline"})}>Let&apos;s make the</h1>
+            <h1 className={title({size: "md", class: "inline"})}>Deploy. Scale. Succeed.</h1>
             <div>
-              <h1 className={title({size: "md"})}>Web&nbsp;</h1>
-              <h1 className={title({size: "md", color: "violet", class: "inline"})}>Prettier</h1>
+              <h1 className={title({size: "md"})}>with&nbsp;</h1>
+              <h1 className={title({size: "md", color: "violet", class: "inline"})}>RDP Datacenter</h1>
             </div>
           </div>
           <p className={subtitle({class: "md:w-full text-base lg:text-lg"})}>
-            Experience it firsthand and show us your creations!
+          Experience seamless cloud deployment and scalability like never before.
           </p>
           <div className="flex flex-row gap-3 justify-start">
             <Button
@@ -67,7 +66,7 @@ export const InstallBanner = () => {
                   strokeWidth={2}
                 />
               }
-              href="/docs/guide/installation"
+              href="/dash"
               radius="full"
               size="md"
             >

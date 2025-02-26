@@ -1,6 +1,6 @@
 import { CloudGlobe } from "@/components/ui/CloudGlobe";
 import { Monitoring } from "@/components/ui/Map/Monitoring";
-import { InstallBanner } from "@/components/ui/install-banner";
+import { PrettyBanner } from "@/components/ui/PrettyBanner";
 import Marquee from "@/components/Marquee";
 export default function Home() {
   return (
@@ -8,7 +8,7 @@ export default function Home() {
   <CloudGlobe />
   <Monitoring />
   <Marquee/>
-  <InstallBanner />
+  <PrettyBanner />
   </>
   );
 }
