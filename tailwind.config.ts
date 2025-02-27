@@ -15,7 +15,7 @@ const config: Config = {
   		animation: {
   			shimmer: 'shimmer 2s linear infinite',
   			'shiny-text': 'shiny-text 8s infinite',
-			"text-gradient": "textGradient 3s linear infinite",
+  			'text-gradient': 'textGradient 3s linear infinite'
   		},
   		keyframes: {
   			shimmer: {
@@ -34,10 +34,14 @@ const config: Config = {
   					'background-position': 'calc(100% + var(--shiny-width)) 0'
   				}
   			},
-			  textGradient: {
-				"0%": { backgroundPosition: "0 -200%" }, // Start fully left
-				"100%": { backgroundPosition: "200% 0" }, // Move fully right
-			  },
+  			textGradient: {
+  				'0%': {
+  					backgroundPosition: '0 -200%'
+  				},
+  				'100%': {
+  					backgroundPosition: '200% 0'
+  				}
+  			}
   		},
   		colors: {
   			background: 'hsl(var(--background))',

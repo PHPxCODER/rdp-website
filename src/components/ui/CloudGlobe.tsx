@@ -1,6 +1,7 @@
 "use client"
 import createGlobe from "cobe"
 import { FunctionComponent, useEffect, useRef } from "react"
+import { ShinyText } from "@/components/magicui/ShinyText"
 
 export const CloudGlobe: FunctionComponent = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -10,8 +11,8 @@ export const CloudGlobe: FunctionComponent = () => {
 
     const globe = createGlobe(canvasRef.current!, {
       devicePixelRatio: 2,
-      width: 1200 * 2,
-      height: 1200 * 2,
+      width: 1000* 2,
+      height: 1000 * 2,
       phi: 0,
       theta: -0.3,
       dark: 1,
@@ -61,11 +62,7 @@ export const CloudGlobe: FunctionComponent = () => {
         className="relative mx-auto flex w-full flex-col items-center justify-center overflow-hidden pt-24 shadow-xl shadow-black/30"
       >
         <div className="absolute top-[17rem] size-[40rem] rounded-full bg-indigo-800 blur-3xl md:top-[20rem]" />
-        <div className="z-10 inline-block rounded-lg border border-indigo-400/20 bg-indigo-800/20 px-3 py-1.5 font-semibold uppercase leading-4 tracking-tight sm:text-sm">
-          <span className="bg-gradient-to-b from-indigo-200 to-indigo-400 bg-clip-text text-transparent">
-            Made for the cloud
-          </span>
-        </div>
+        <ShinyText />
         <h2
           id="global-database-title"
           className="z-10 mt-6 inline-block bg-gradient-to-b from-white to-indigo-100 bg-clip-text px-2 text-center text-5xl font-bold tracking-tighter text-transparent md:text-8xl"
@@ -75,7 +72,7 @@ export const CloudGlobe: FunctionComponent = () => {
         <canvas
           className="absolute top-[7.1rem] z-20 aspect-square size-full max-w-fit md:top-[12rem]"
           ref={canvasRef}
-          style={{ width: 1200, height: 1200 }}
+          style={{ width: 1000, height: 1000 }}
         />
         <div className="z-20 -mt-32 h-[36rem] w-full overflow-hidden md:-mt-36">
           <div className="absolute bottom-0 h-3/5 w-full bg-gradient-to-b from-transparent via-gray-950/95 to-gray-950" />
