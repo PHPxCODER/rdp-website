@@ -1,5 +1,3 @@
-// app/layout.tsx
-
 import "./globals.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
@@ -15,7 +13,7 @@ import { ProBanner } from "@/components/ProBanner";
 
 // Import Bahamas as a local font
 const bahamas = localFont({
-  src: "./fonts/Bahamas.woff",
+  src: "./(landing)/fonts/Bahamas.woff",
   variable: "--font-bahamas",
   weight: "100 900",
 });
