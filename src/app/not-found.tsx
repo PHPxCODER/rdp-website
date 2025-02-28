@@ -5,7 +5,7 @@ import { ArrowLeft, Server, Wifi, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion, Variants } from 'framer-motion';
 import StatusIndicator from "@/components/StatusIndicator";
-import GradientBackground from "@/components/ui/GradientBackground";
+import { GradientBackground } from "@/components/ui/GradientBackground";
 import emitter from "@/lib/emitter";
 import { siteConfig } from "@/config/site";
 

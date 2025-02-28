@@ -1,7 +1,10 @@
+import { GradientBackground } from "@/components/ui/GradientBackground";
+
 export default function TermsAndConditions() {
     return (
       <div className="min-h-screen flex items-center justify-center p-6">
-        <div className="w-full max-w-4xl rounded-2xl border border-border p-8 shadow-lg">
+        <GradientBackground />
+        <div className="w-full max-w-4xl rounded-2xl border border-border p-8 shadow-lg bg-transparent backdrop-blur">
           <h1 className="text-4xl font-bold mb-6 text-center">Terms & Conditions</h1>
           <p className="mb-4">Effective Date: 20th February 2025</p>
   

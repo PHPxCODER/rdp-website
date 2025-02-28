@@ -70,7 +70,6 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.18",
     "prisma": "^6.4.0",
-    "react-email": "3.0.7",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }
