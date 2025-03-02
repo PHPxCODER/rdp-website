@@ -1,4 +1,9 @@
 import { GradientBackground } from "@/components/ui/GradientBackground";
+import { siteConfig } from "@/config/site";
+
+export const metadata = {
+  title: `T&Cs | ${siteConfig.name}`,
+};
 
 export default function TermsAndConditions() {
     return (

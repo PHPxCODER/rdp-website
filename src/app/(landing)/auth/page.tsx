@@ -3,7 +3,11 @@ import { Toaster } from "@/components/ui/toaster"
 import { redirect } from "next/navigation"
 import { getServerSession } from "next-auth/next"
 import SigninForm from './SigninForm'
+import { siteConfig } from "@/config/site";
 
+export const metadata = {
+  title: `Sign In | ${siteConfig.name}`,
+};
 
 const page = async() => {
   const session = await getServerSession()

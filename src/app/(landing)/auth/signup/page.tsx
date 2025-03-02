@@ -3,9 +3,10 @@ import { Toaster } from "@/components/ui/toaster"
 import { redirect } from "next/navigation"
 import { getServerSession } from "next-auth/next"
 import SignupForm from './SignupForm'
+import { siteConfig } from "@/config/site";
 
 export const metadata = {
-  title: `Sign Up | `,
+  title: `Sign Up | ${siteConfig.name}`,
 };
 
 const page = async() => {
