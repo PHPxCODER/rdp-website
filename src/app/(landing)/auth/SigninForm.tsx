@@ -32,7 +32,10 @@ import {
   FormDescription,
 } from "@/components/ui/form"
 import { useToast } from "@/hooks/use-toast"
+import { GradientBackground } from "@/components/ui/GradientBackground"
 import { useRouter } from "next/navigation"
+import { FcGoogle } from "react-icons/fc";
+import { FaGithub } from "react-icons/fa";
 
 const OTPFormSchema = z.object({
   pin: z.string().min(6, {
@@ -47,6 +50,8 @@ export function SigninForm() {
   const [attemptCount, setAttemptCount] = useState(0) // State to track OTP attempts
   const { toast } = useToast() // ShadCN UI toast hook
   const router = useRouter()
+  const GoogleIcon = () => <FcGoogle size={24} />;
+  const GithubIcon = () => <FaGithub size={24} />;
 
   const form = useForm<z.infer<typeof OTPFormSchema>>({
     resolver: zodResolver(OTPFormSchema),
@@ -109,7 +114,7 @@ export function SigninForm() {
       }
   
       // If the user exists, send the OTP via NextAuth sign-in
-      const response = await signIn("email", { email, redirect: false })
+      const response = await signIn("email", { email, redirect: false, callbackUrl: "/dash" })
   
       if (response?.error) {
         toast({
@@ -154,7 +159,7 @@ export function SigninForm() {
     const formattedCallback = encodeURIComponent('/dash')
     const otpRequestURL = `/api/auth/callback/email?email=${formattedEmail}&token=${formattedCode}&callbackUrl=${formattedCallback}`
     
-    const response = await fetch(otpRequestURL)
+    const response = await fetch(otpRequestURL, { cache: "no-store" })
 
     if (response.ok) {
       router.push('/dash')
@@ -189,10 +194,26 @@ export function SigninForm() {
     }
   }
 
+  // Function to handle Github sign-in
+  const handleGithubSignIn = async () => {
+    const result = await signIn("github", { callbackUrl: "/dash", redirect: false })
+    if (result?.error) {
+      toast({
+        title: "GitHub OAuth Error",
+        description: "There was an issue signing in with Google. Please try again.",
+        variant: "destructive",
+      })
+    } else if (result?.url) {
+      router.push(result.url)
+    }
+  }
+
   return (
-    <Card className="mx-auto max-w-sm">
+    <div className="relative flex items-center justify-center">
+      <GradientBackground />
+    <Card className="mx-auto max-w-sm relative z-10 bg-black/10 backdrop-blur border border-white/20">
       <CardHeader>
-        <CardTitle className="text-2xl">Login</CardTitle>
+        <CardTitle className="text-2xl">Sign In</CardTitle>
         <CardDescription>
           {emailSubmitted
             ? `Enter the OTP sent to ${email}`
@@ -208,7 +229,7 @@ export function SigninForm() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="meow@example.com"
+                  placeholder="meow@rdpdatacenter.cloud"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -216,11 +237,17 @@ export function SigninForm() {
               </div>
 
               <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? "Sending email..." : "Signin Using OTP Code"}
+                {isSubmitting ? "Sending email..." : "Send OTP"}
               </Button>
 
               <Button onClick={handleGoogleSignIn} variant="outline" className="w-full" type="button">
-                Login with Google
+                <GoogleIcon />
+                Signin with Google
+              </Button>
+
+              <Button onClick={handleGithubSignIn} variant="outline" className="w-full" type="button">
+                <GithubIcon />
+                Signin with Github
               </Button>
             </div>
           </form>
@@ -283,6 +310,7 @@ export function SigninForm() {
         </div>
       </CardContent>
     </Card>
+    </div>
   )
 }
 

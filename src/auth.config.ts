@@ -1,6 +1,7 @@
 import EmailProvider from "next-auth/providers/email";
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import GithubProvider from "next-auth/providers/github";
 import { Adapter } from "next-auth/adapters";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
@@ -28,12 +29,17 @@ export const OPTIONS: NextAuthOptions = {
 
   providers: [
     GoogleProvider({
-      clientId: process.env.AUTH_GOOGLE_ID ?? "",
-      clientSecret: process.env.AUTH_GOOGLE_SECRET ?? "",
+      clientId: process.env.AUTH_GOOGLE_ID as string,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET as string,
       allowDangerousEmailAccountLinking: true,
       httpOptions: {
         timeout: 10000, // Set this value higher than 3500ms (e.g., 10000ms)
       },
+    }),
+    GithubProvider({
+      clientId: process.env.AUTH_GITHUB_ID as string,
+      clientSecret: process.env.AUTH_GITHUB_SECRET as string,
+      allowDangerousEmailAccountLinking: true,
     }),
     EmailProvider({
       server: {

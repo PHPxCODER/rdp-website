@@ -1,7 +1,7 @@
 "use client"
 import Link from "next/link"
+import { signIn } from "next-auth/react"
 import { useToast } from "@/hooks/use-toast"
-import { ToastAction } from "@/components/ui/toast"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -10,16 +10,51 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { GradientBackground } from "@/components/ui/GradientBackground"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useRouter } from "next/navigation"
+import { FcGoogle } from "react-icons/fc";
+import { FaGithub } from "react-icons/fa";
 
 export const description =
   "A sign up form with first name, last name, email and password inside a card. There's an option to sign up with GitHub and a link to login if you already have an account"
 
 export function SignupForm() {
 const { toast } = useToast()
+const router = useRouter()
+const GoogleIcon = () => <FcGoogle size={24} />;
+const GithubIcon = () => <FaGithub size={24} />;
+
+const handleGoogleSignIn = async () => {
+  const result = await signIn("google", { callbackUrl: "/dash", redirect: false })
+  if (result?.error) {
+    toast({
+      title: "Google OAuth Error",
+      description: "There was an issue signing in with Google. Please try again.",
+      variant: "destructive",
+    })
+  } else if (result?.url) {
+    router.push(result.url)
+  }
+}
+
+const handleGithubSignIn = async () => {
+  const result = await signIn("github", { callbackUrl: "/dash", redirect: false })
+  if (result?.error) {
+    toast({
+      title: "Google OAuth Error",
+      description: "There was an issue signing in with Google. Please try again.",
+      variant: "destructive",
+    })
+  } else if (result?.url) {
+    router.push(result.url)
+  }
+}
   return (
-    <Card className="mx-auto max-w-sm">
+    <div className="relative flex items-center justify-center">
+    <GradientBackground />
+    <Card className="mx-auto max-w-sm relative z-10 bg-black/10 backdrop-blur border border-white/20">
       <CardHeader>
         <CardTitle className="text-xl">Sign Up</CardTitle>
         <CardDescription>
@@ -43,7 +78,7 @@ const { toast } = useToast()
             <Input
               id="email"
               type="email"
-              placeholder="m@example.com"
+              placeholder="meow@rdpdatacenter.cloud"
               required
             />
           </div>
@@ -54,19 +89,15 @@ const { toast } = useToast()
           <Button type="submit" className="w-full">
             Create an account
           </Button>
-          <Button
-      variant="outline"
-      onClick={() => {
-        toast({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description: "There was a problem with your request.",
-          action: <ToastAction altText="Try again">Try again</ToastAction>,
-        })
-      }}
-    >
-            Sign up with GitHub
-          </Button>
+          <Button onClick={handleGoogleSignIn} variant="outline" className="flex items-center gap-2">
+          <GoogleIcon />
+              Sign up with Google
+            </Button>
+
+          <Button onClick={handleGithubSignIn} variant="outline" className="flex items-center gap-2">
+          <GithubIcon />
+              Sign up with Github
+            </Button>
         </div>
         <div className="mt-4 text-center text-sm">
           Already have an account?{" "}
@@ -76,6 +107,7 @@ const { toast } = useToast()
         </div>
       </CardContent>
     </Card>
+    </div>
   )
 }
 export default SignupForm
