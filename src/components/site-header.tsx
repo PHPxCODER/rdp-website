@@ -1,4 +1,6 @@
+"use client"
 import Link from "next/link";
+import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@heroui/react";
 import { CommandMenu } from "@/components/command-menu";
 import { Icons } from "@/components/icons";
 import { MainNav } from "@/components/main-nav";
@@ -7,8 +9,11 @@ import { ModeToggle } from "@/components/mode-toggle";
 import { buttonVariants } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
+import { useSession, signOut } from "next-auth/react";
+import { ExternalLink } from "lucide-react";
 
-export async function SiteHeader() {
+export function SiteHeader() {
+  const { data: session } = useSession();
   return (
     <header
       className={cn(
@@ -23,23 +28,6 @@ export async function SiteHeader() {
             <CommandMenu />
           </div>
           <nav className="flex items-center gap-1">
-            <Link
-              href={siteConfig.name}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <div
-                className={cn(
-                  buttonVariants({
-                    variant: "ghost",
-                  }),
-                  "w-9 px-0",
-                )}
-              >
-                <Icons.gitHub className="size-4" />
-                <span className="sr-only">Discord</span>
-              </div>
-            </Link>
             <Link
               href={siteConfig.links.github}
               target="_blank"
@@ -75,6 +63,52 @@ export async function SiteHeader() {
               </div>
             </Link>
             <ModeToggle />
+            {/* User Avatar Dropdown */}
+            <Dropdown placement="bottom-end" shouldBlockScroll={false} className="bg-background/60 backdrop-blur">
+              <DropdownTrigger>
+                <Avatar
+                  isBordered = {false}
+                  as="button"
+                  className="transition-transform w-7 h-7 text-xs"
+                  color="secondary"
+                  name={typeof session?.user?.name === 'string' ? session.user.name : "User"}
+                  size="sm"
+                  src={typeof session?.user?.image === 'string' ? session.user.image : "/images/avatar.png"}
+                />
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Profile Actions" variant="flat">
+                <DropdownItem key="profile" className="h-14 gap-2">
+                  {session ? (
+                    <>
+                      <p className="font-semibold">Signed in as {typeof session?.user?.name === 'string' ? session.user.name : "User"}</p>
+                      <p className="text-sm text-default-500">{typeof session?.user?.email === 'string' ? session.user.email : ""}</p>
+                    </>
+                  ) : (
+                    <p className="font-semibold">Not Signed in</p>
+                  )}
+                </DropdownItem>
+                <DropdownItem key="home" href="/">Home</DropdownItem>
+                <DropdownItem key="profile" href="/dash">My Profile</DropdownItem>
+                <DropdownItem key="update">Update Profile</DropdownItem>
+                <DropdownItem key="privacy" href="/Privacy">Privacy Policy</DropdownItem>
+                <DropdownItem key="t&cs" href="/T&Cs">T&Cs</DropdownItem>
+                <DropdownItem key="status" href="https://status.rdpdatacenter.cloud" target="_blank">
+                  <div className="flex items-center gap-2">
+                    <span>Status Page</span>
+                    <ExternalLink className="size-4" />
+                  </div>
+                </DropdownItem>
+                {session ? (
+                  <DropdownItem key="signout" color="danger" onPress={() => signOut()}>
+                    Sign Out
+                  </DropdownItem>
+                ) : (
+                  <DropdownItem key="signin" color="primary" href="/auth">
+                    Sign In
+                  </DropdownItem>
+                )}
+              </DropdownMenu>
+            </Dropdown>
           </nav>
         </div>
       </div>
