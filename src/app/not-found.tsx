@@ -1,3 +1,4 @@
+import { ProBanner } from "@/components/ProBanner";
 import { siteConfig } from "@/config/site";
 import { SiteHeader } from "@/components/site-header";
 import { Footer } from "@/components/ui/Footer";
@@ -10,6 +11,7 @@ export const metadata = {
 const NotFound = async () => {
   return (
     <>
+    <ProBanner />
     <SiteHeader />
     <ErrorPage />
     <Footer />
