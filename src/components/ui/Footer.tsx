@@ -94,7 +94,7 @@ async function StatusIndicator() {
   );
 }
 
-export default function Footer() {
+export function Footer() {
   return (
     <footer id="footer">
       <div className="mx-auto max-w-6xl px-3 pb-8 pt-16 sm:pt-24 lg:pt-32 relative z-10">
