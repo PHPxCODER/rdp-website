@@ -7,6 +7,7 @@ import { siteConfig } from "@/config/site";
 import SignOutButton from "@/components/ui/SignoutButton"; 
 import {GradientBackground} from "@/components/ui/GradientBackground";
 import GreetingMessage from "@/components/ui/GreetingMessage";
+import { ConfettiFireworks } from "@/components/ui/Confetti";
 
 export const metadata = {
   title: `Dashboard | ${siteConfig.name}`,
@@ -22,6 +23,7 @@ const DashPage = async () => {
   return (
     <div className="relative flex flex-col items-center top-10 justify-center">
       {/* Gradient Background */}
+      <ConfettiFireworks />
       <GradientBackground />
 
       <div className="max-w-3xl mx-auto p-6 shadow-md rounded-lg backdrop-blur-md">

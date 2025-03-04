@@ -72,7 +72,7 @@ const ErrorPage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+    <div className="min-h-[calc(100vh-8rem)] bg-background flex items-center justify-center p-4">
       {/* Background Gradient */}
       <GradientBackground/>
       <div className="relative z-10">

@@ -33,7 +33,7 @@ export const OPTIONS: NextAuthOptions = {
       clientSecret: process.env.AUTH_GOOGLE_SECRET as string,
       allowDangerousEmailAccountLinking: true,
       httpOptions: {
-        timeout: 10000, // Set this value higher than 3500ms (e.g., 10000ms)
+        timeout: 30000, // Set this value higher than 3500ms (e.g., 10000ms)
       },
     }),
     GithubProvider({
