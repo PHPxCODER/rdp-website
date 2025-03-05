@@ -50,6 +50,8 @@ export function SigninForm() {
   const [attemptCount, setAttemptCount] = useState(0) // State to track OTP attempts
   const { toast } = useToast() // ShadCN UI toast hook
   const router = useRouter()
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false)
+  const [isGithubLoading, setIsGithubLoading] = useState(false)
   const GoogleIcon = () => <FcGoogle size={24} />;
   const GithubIcon = () => <FaGithub size={24} />;
 
@@ -182,6 +184,7 @@ export function SigninForm() {
 
   // Function to handle Google sign-in
   const handleGoogleSignIn = async () => {
+    setIsGoogleLoading(true)
     const result = await signIn("google", { callbackUrl: "/dash", redirect: false })
     if (result?.error) {
       toast({
@@ -189,6 +192,7 @@ export function SigninForm() {
         description: "There was an issue signing in with Google. Please try again.",
         variant: "destructive",
       })
+      setIsGoogleLoading(false)
     } else if (result?.url) {
       router.push(result.url)
     }
@@ -196,6 +200,7 @@ export function SigninForm() {
 
   // Function to handle Github sign-in
   const handleGithubSignIn = async () => {
+    setIsGithubLoading(true)
     const result = await signIn("github", { callbackUrl: "/dash", redirect: false })
     if (result?.error) {
       toast({
@@ -203,6 +208,7 @@ export function SigninForm() {
         description: "There was an issue signing in with Google. Please try again.",
         variant: "destructive",
       })
+      setIsGithubLoading(false)
     } else if (result?.url) {
       router.push(result.url)
     }
@@ -240,13 +246,13 @@ export function SigninForm() {
                 {isSubmitting ? "Sending email..." : "Send OTP"}
               </Button>
 
-              <Button onPress={handleGoogleSignIn} variant="light" radius="full" className="w-full" type="button">
-                <GoogleIcon />
+              <Button onPress={handleGoogleSignIn} isLoading={isGoogleLoading} disabled={isGoogleLoading} variant="light" radius="full" className="w-full" type="button">
+                {!isGoogleLoading && <GoogleIcon />}
                 Signin with Google
               </Button>
 
-              <Button onPress={handleGithubSignIn} variant="light" radius="full" className="w-full" type="button">
-                <GithubIcon />
+              <Button onPress={handleGithubSignIn} isLoading={isGithubLoading} disabled={isGithubLoading} variant="light" radius="full" className="w-full" type="button">
+                {!isGithubLoading && <GithubIcon />}
                 Signin with Github
               </Button>
             </div>

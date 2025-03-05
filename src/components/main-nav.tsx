@@ -35,13 +35,15 @@ export function MainNav() {
             key={item.href}
             href={item.href!}
             aria-label={item.title}
-            
+
             target={item.external ? "_blank" : undefined}
             className={cn(
               "flex items-center justify-center transition-colors hover:text-foreground/80",
-              pathname?.startsWith(item.href!)
+              pathname === item.href
                 ? "text-foreground"
-                : "text-foreground/60",
+                : pathname.startsWith(item.href!) && item.href !== "/"
+                  ? "text-foreground"
+                  : "text-foreground/60",
             )}
           >
             <span className="shrink-0">{item.title}</span>

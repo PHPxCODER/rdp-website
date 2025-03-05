@@ -1,6 +1,7 @@
 "use client"
 import Link from "next/link";
 import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@heroui/react";
+import { RiArrowRightUpLine } from "@remixicon/react"
 import { CommandMenu } from "@/components/command-menu";
 import { Icons } from "@/components/icons";
 import { MainNav } from "@/components/main-nav";
@@ -10,7 +11,6 @@ import { buttonVariants } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { useSession, signOut } from "next-auth/react";
-import { ExternalLink } from "lucide-react";
 
 export function SiteHeader() {
   const { data: session } = useSession();
@@ -20,7 +20,7 @@ export function SiteHeader() {
         "supports-backdrop-blur:bg-background/90 sticky top-0 z-40 w-full border-border bg-background/10 backdrop-blur",
       )}
     >
-      <div className="container mx-auto flex h-12 items-center">
+      <div className="px-2 sm:px-4 md:container mx-auto flex h-12 items-center">
         <MainNav />
         <MobileNav />
         <div className="flex flex-1 items-center justify-between gap-2 md:justify-end">
@@ -107,15 +107,15 @@ export function SiteHeader() {
                 <DropdownItem key="privacy" href="/Privacy">Privacy Policy</DropdownItem>
                 <DropdownItem key="t&cs" href="/T&Cs">Terms & Conditions</DropdownItem>
                 <DropdownItem key="status" href="https://status.rdpdatacenter.cloud" target="_blank">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1">
                     <span>Status Page</span>
-                    <ExternalLink className="size-4" />
+                    <RiArrowRightUpLine className="size-4" />
                   </div>
                 </DropdownItem>
 
                 {/* Authentication Links */}
                 {session ? (
-                  <DropdownItem key="signout" color="danger" onPress={() => signOut()}>
+                  <DropdownItem key="signout" color="danger" onPress={() => {localStorage.removeItem("hasSeenConfetti"); signOut();}}>
                     Sign Out
                   </DropdownItem>
                 ) : (
