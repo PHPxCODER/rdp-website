@@ -6,7 +6,7 @@ import { signIn } from "next-auth/react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Button } from "@/components/ui/button"
+import { Button } from "@heroui/react"
 import {
   Card,
   CardContent,
@@ -236,16 +236,16 @@ export function SigninForm() {
                 />
               </div>
 
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
+              <Button type="submit" color="primary" radius="full" disabled={isSubmitting} isLoading={isSubmitting}>
                 {isSubmitting ? "Sending email..." : "Send OTP"}
               </Button>
 
-              <Button onClick={handleGoogleSignIn} variant="outline" className="w-full" type="button">
+              <Button onPress={handleGoogleSignIn} variant="light" radius="full" className="w-full" type="button">
                 <GoogleIcon />
                 Signin with Google
               </Button>
 
-              <Button onClick={handleGithubSignIn} variant="outline" className="w-full" type="button">
+              <Button onPress={handleGithubSignIn} variant="light" radius="full" className="w-full" type="button">
                 <GithubIcon />
                 Signin with Github
               </Button>
@@ -288,7 +288,7 @@ export function SigninForm() {
 
               <Button
                 type="submit"
-                className="w-full"
+                className="w-full" color="primary" radius="full" isLoading={isSubmitting}
                 disabled={isSubmitting || attemptCount >= 3} // Disable if maximum attempts reached
               >
                 {isSubmitting ? "Verifying OTP..." : "Verify OTP"}

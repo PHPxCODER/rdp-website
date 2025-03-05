@@ -2,7 +2,7 @@
 import Link from "next/link"
 import { signIn } from "next-auth/react"
 import { useToast } from "@/hooks/use-toast"
-import { Button } from "@/components/ui/button"
+import { Button } from "@heroui/react"
 import {
   Card,
   CardContent,
@@ -86,15 +86,15 @@ const handleGithubSignIn = async () => {
             <Label htmlFor="password">Password</Label>
             <Input id="password" type="password" />
           </div>
-          <Button type="submit" className="w-full">
+          <Button type="submit" color="primary" radius="full" className="w-full">
             Create an account
           </Button>
-          <Button onClick={handleGoogleSignIn} variant="outline" className="flex items-center gap-2">
+          <Button onPress={handleGoogleSignIn} variant="light" radius="full" className="flex items-center gap-2">
           <GoogleIcon />
               Sign up with Google
             </Button>
 
-          <Button onClick={handleGithubSignIn} variant="outline" className="flex items-center gap-2">
+          <Button onPress={handleGithubSignIn} variant="light" radius="full" className="flex items-center gap-2">
           <GithubIcon />
               Sign up with Github
             </Button>

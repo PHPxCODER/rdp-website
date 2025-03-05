@@ -17,10 +17,10 @@ export function SiteHeader() {
   return (
     <header
       className={cn(
-        "supports-backdrop-blur:bg-background/90 sticky top-0 z-40 w-full border-border bg-background/40 backdrop-blur-lg",
+        "supports-backdrop-blur:bg-background/90 sticky top-0 z-40 w-full border-border bg-background/10 backdrop-blur",
       )}
     >
-      <div className="container mx-auto flex h-14 items-center">
+      <div className="container mx-auto flex h-12 items-center">
         <MainNav />
         <MobileNav />
         <div className="flex flex-1 items-center justify-between gap-2 md:justify-end">
@@ -67,7 +67,7 @@ export function SiteHeader() {
             <Dropdown placement="bottom-end" shouldBlockScroll={false} className="bg-background/60 backdrop-blur">
               <DropdownTrigger>
                 <Avatar
-                  isBordered = {false}
+                  isBordered={false}
                   as="button"
                   className="transition-transform w-7 h-7 text-xs"
                   color="secondary"
@@ -80,24 +80,40 @@ export function SiteHeader() {
                 <DropdownItem key="profile" className="h-14 gap-2">
                   {session ? (
                     <>
-                      <p className="font-semibold">Signed in as {typeof session?.user?.name === 'string' ? session.user.name : "User"}</p>
-                      <p className="text-sm text-default-500">{typeof session?.user?.email === 'string' ? session.user.email : ""}</p>
+                      <p className="font-semibold">
+                        Signed in as {typeof session?.user?.name === "string" ? session.user.name : "User"}
+                      </p>
+                      <p className="text-sm text-default-500">
+                        {typeof session?.user?.email === "string" ? session.user.email : ""}
+                      </p>
                     </>
                   ) : (
                     <p className="font-semibold">Not Signed in</p>
                   )}
                 </DropdownItem>
+
+                {/* Home */}
                 <DropdownItem key="home" href="/">Home</DropdownItem>
-                <DropdownItem key="profile" href="/dash">My Profile</DropdownItem>
-                <DropdownItem key="update">Update Profile</DropdownItem>
+
+                {/* Show these only when user is logged in */}
+                {session && (
+                  <>
+                    <DropdownItem key="profile" href="/dash">My Profile</DropdownItem>
+                    <DropdownItem key="update" href="/update-profile">Update Profile</DropdownItem>
+                  </>
+                )}
+
+                {/* Privacy & Other Links */}
                 <DropdownItem key="privacy" href="/Privacy">Privacy Policy</DropdownItem>
-                <DropdownItem key="t&cs" href="/T&Cs">T&Cs</DropdownItem>
+                <DropdownItem key="t&cs" href="/T&Cs">Terms & Conditions</DropdownItem>
                 <DropdownItem key="status" href="https://status.rdpdatacenter.cloud" target="_blank">
                   <div className="flex items-center gap-2">
                     <span>Status Page</span>
                     <ExternalLink className="size-4" />
                   </div>
                 </DropdownItem>
+
+                {/* Authentication Links */}
                 {session ? (
                   <DropdownItem key="signout" color="danger" onPress={() => signOut()}>
                     Sign Out
