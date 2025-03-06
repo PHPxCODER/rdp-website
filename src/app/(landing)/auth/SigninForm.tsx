@@ -238,6 +238,7 @@ export function SigninForm() {
                   placeholder="meow@rdpdatacenter.cloud"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  autoFocus 
                   required
                 />
               </div>
