@@ -6,6 +6,33 @@ export interface DocsConfig {
   chartsNav: SidebarNavItem[]
 }
 
+export const team = [
+  {
+    name: "Subhadeep Pramanik",
+    role: "Founder",
+    image: "https://res.cloudinary.com/ddvheihbd/image/upload/f_auto,q_auto/v1/team/phpxcoder",
+    linkedin: "https://linkedin.com/in/phpxcoder",
+    github: "https://github.com/phpxcoder",
+    website: "https://phpxcoder.in",
+  },
+  {
+    name: "Dinesh Yerra",
+    role: "Co-Founder & CTO",
+    image: "https://res.cloudinary.com/ddvheihbd/image/upload/t_dino_1_1/team/dinokage",
+    linkedin: "https://linkedin.com/in/dinesh-yerra-24031a206/",
+    github: "https://github.com/dinokage",
+    website: "https://dinokage.in",
+  },
+  {
+    name: "Rahul Kose",
+    role: "Co-Founder & Content Manager",
+    image: "https://res.cloudinary.com/ddvheihbd/image/upload/ar_1:1,c_crop,g_north_east/team/rgxjapan",
+    linkedin: "#",
+    github: "#",
+    website: "https://kandabhaja.nl",
+  },
+];
+
 export const docsConfig: DocsConfig = {
   mainNav: [
     {
