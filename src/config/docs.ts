@@ -19,7 +19,7 @@ export const team = [
     name: "Dinesh Yerra",
     role: "Co-Founder & CTO",
     image: "https://res.cloudinary.com/ddvheihbd/image/upload/t_dino_1_1/team/dinokage",
-    linkedin: "https://linkedin.com/in/dinesh-yerra-24031a206/",
+    linkedin: "https://linkedin.com/in/dinokage/",
     github: "https://github.com/dinokage",
     website: "https://dinokage.in",
   },

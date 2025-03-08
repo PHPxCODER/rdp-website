@@ -4,6 +4,7 @@ import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@
 import { RiArrowRightUpLine } from "@remixicon/react"
 import { CommandMenu } from "@/components/command-menu";
 import { Icons } from "@/components/icons";
+import { GithubIcon } from "./ui/github";
 import { MainNav } from "@/components/main-nav";
 import { MobileNav } from "@/components/mobile-nav";
 import { ModeToggle } from "@/components/mode-toggle";
@@ -41,7 +42,8 @@ export function SiteHeader() {
                   "w-9 px-0",
                 )}
               >
-                <Icons.gitHub className="size-4" />
+                {/* <Icons.gitHub className="size-4" /> */}
+                <GithubIcon />
                 <span className="sr-only">GitHub</span>
               </div>
             </Link>
