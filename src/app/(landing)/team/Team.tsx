@@ -3,8 +3,9 @@ import { Card, CardHeader, CardFooter } from "@heroui/card";
 import { Avatar } from "@heroui/avatar";
 import { Button } from "@heroui/button";
 import { Skeleton } from "@heroui/skeleton";
-import { Globe } from "lucide-react";
-import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { EarthIcon } from "@/components/ui/earth";
+import { GithubIcon } from "@/components/ui/github";
+import { LinkedinIcon } from "@/components/ui/linkedin";
 import { team } from "@/config/docs";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils"
@@ -53,14 +54,14 @@ export function Team() {
                                 </div>
                             ) : (
                                 <>
-                                    <Button isIconOnly variant="light" href={member.linkedin} as="a">
-                                        <FaLinkedin size={18} />
+                                    <Button isIconOnly variant="light" href={member.linkedin} target="_blank" as="a">
+                                        <LinkedinIcon size={18} />
                                     </Button>
-                                    <Button isIconOnly variant="light" href={member.github} as="a">
-                                        <FaGithub size={18} />
+                                    <Button isIconOnly variant="light" href={member.github} target="_blank" as="a">
+                                        <GithubIcon size={18} />
                                     </Button>
-                                    <Button isIconOnly variant="light" href={member.website} as="a">
-                                        <Globe size={18} />
+                                    <Button isIconOnly variant="light" href={member.website} target="_blank" as="a">
+                                        <EarthIcon size={18} />
                                     </Button>
                                 </>
                             )}

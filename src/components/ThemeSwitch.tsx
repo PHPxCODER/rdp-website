@@ -1,7 +1,11 @@
 "use client"
-import { cn, focusRing } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 import * as RadioGroupPrimitives from "@radix-ui/react-radio-group"
-import { RiComputerLine, RiMoonLine, RiSunLine } from "@remixicon/react"
+// import { RiComputerLine } from "@remixicon/react"
+// import { Monitor } from "lucide-react"
+import { CompassIcon } from "./ui/compass"
+import { SunIcon } from "./ui/sun"
+import {MoonIcon} from "./ui/moon"
 import { useTheme } from "next-themes"
 import React, { useEffect, useState } from "react"
 
@@ -46,10 +50,10 @@ const RadioGroupItem = React.forwardRef<
           // checked
           "group-data-[state=checked]:bg-indigo-50 group-data-[state=checked]:text-indigo-600 dark:group-data-[state=checked]:bg-indigo-500/20 dark:group-data-[state=checked]:text-indigo-300",
           // focus
-          focusRing,
+       
         )}
       >
-        <Icon className="size-4 text-inherit" />
+        <Icon className="size-8" />
       </div>
     </RadioGroupPrimitives.Item>
   )
@@ -80,21 +84,21 @@ const ThemeSwitch = () => {
     >
       <RadioGroupItem
         aria-label="Switch to System Mode"
-        icon={RiComputerLine}
+        icon={CompassIcon}
         value="system"
         id="system"
       />
 
       <RadioGroupItem
         aria-label="Switch to Light Mode"
-        icon={RiSunLine}
+        icon={SunIcon}
         value="light"
         id="light"
       />
 
       <RadioGroupItem
         aria-label="Switch to Dark Mode"
-        icon={RiMoonLine}
+        icon={MoonIcon}
         value="dark"
         id="dark"
       />

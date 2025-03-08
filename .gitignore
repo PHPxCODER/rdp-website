@@ -9,6 +9,7 @@ yarn.lock
 
 # environmental variables
 .env
+.env.*
 
 # testing
 /coverage
