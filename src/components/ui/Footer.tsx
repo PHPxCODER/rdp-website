@@ -19,8 +19,8 @@ const navigation = {
   ],
   company: [
     { name: "About", href: "/about", external: false },
-    { name: "Careers", href: "#", external: true },
-    { name: "Contact", href: "#", external: false },
+    { name: "Team", href: "/team", external: false },
+    { name: "Careers", href: "/careers", external: false },
     { name: "Status", href: "https://status.rdpdatacenter.cloud", external: true },
   ],
   legal: [
