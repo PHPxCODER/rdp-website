@@ -21,7 +21,7 @@ const navigation = {
     { name: "About", href: "/about", external: false },
     { name: "Team", href: "/team", external: false },
     { name: "Careers", href: "/careers", external: false },
-    { name: "Status", href: "https://status.rdpdatacenter.cloud", external: true },
+    { name: "Status", href: "https://status.rdpdatacenter.in", external: true },
   ],
   legal: [
     { name: "Privacy", href: "/Privacy", external: false },
@@ -75,7 +75,7 @@ async function StatusIndicator() {
 
   return (
     <Link
-      href="https://status.rdpdatacenter.cloud"
+      href="https://status.rdpdatacenter.in"
       target="_blank"
       rel="noopener noreferrer"
       className="flex items-center space-x-2 rounded-full border border-gray-200 py-1 pl-1 pr-2 transition hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-gray-900"

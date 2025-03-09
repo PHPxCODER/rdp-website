@@ -35,8 +35,8 @@ export function getSubscriptionEmailTemplate({ email, unsubscribeUrl }: EmailPro
 
           <Text style={styles.text}>
             Stay tuned—our platform is launching soon! Visit{" "}
-            <Link href="https://rdpdatacenter.cloud/" style={styles.link}>
-              rdpdatacenter.cloud
+            <Link href="https://rdpdatacenter.in/" style={styles.link}>
+              rdpdatacenter.in
             </Link>{" "}
             for updates.
           </Text>
@@ -117,8 +117,8 @@ const Footer = ({ unsubscribeUrl }: { unsubscribeUrl?: string }) => (
     </div>
 
     <Text style={styles.contact}>
-      <Link href="https://rdpdatacenter.cloud/" style={styles.link}>rdpdatacenter.cloud</Link> |{" "}
-      <Link href="mailto:noc@rdpdatacenter.cloud" style={styles.link}>noc@rdpdatacenter.cloud</Link>
+      <Link href="https://rdpdatacenter.in/" style={styles.link}>rdpdatacenter.in</Link> |{" "}
+      <Link href="mailto:noc@rdpdatacenter.in" style={styles.link}>noc@rdpdatacenter.in</Link>
     </Text>
 
     {unsubscribeUrl && (

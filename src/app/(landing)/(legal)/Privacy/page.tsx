@@ -74,9 +74,9 @@ export default function PrivacyPolicy() {
               <li><strong>Data Deletion:</strong> Request the deletion of your personal information, subject to legal obligations.</li>
               <li><strong>Opt-Out:</strong> Unsubscribe from marketing emails and restrict cookie tracking.</li>
             </ul>
-            <p>To exercise your rights, contact us at <a href="mailto:legal@rdpdatacenter.cloud" className="relative text-amber-600 font-semibold transition ease-in duration-200 
+            <p>To exercise your rights, contact us at <a href="mailto:legal@rdpdatacenter.in" className="relative text-amber-600 font-semibold transition ease-in duration-200 
              after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 after:h-[2px] 
-             after:bg-amber-600 after:transition-all after:duration-200 hover:after:w-full">legal@rdpdatacenter.cloud</a>.</p>
+             after:bg-amber-600 after:transition-all after:duration-200 hover:after:w-full">legal@rdpdatacenter.in</a>.</p>
           </section>
   
           <section className="space-y-4 mt-6">
@@ -98,9 +98,9 @@ export default function PrivacyPolicy() {
           <section className="space-y-4 mt-6">
             <h2 className="text-2xl font-semibold">9. Contact Us</h2>
             <p>
-              If you have any questions regarding this Privacy Policy, please contact us at <a href="mailto:legal@rdpdatacenter.cloud" className="relative text-amber-600 font-semibold transition ease-in duration-200 
+              If you have any questions regarding this Privacy Policy, please contact us at <a href="mailto:legal@rdpdatacenter.in" className="relative text-amber-600 font-semibold transition ease-in duration-200 
              after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 after:h-[2px] 
-             after:bg-amber-600 after:transition-all after:duration-200 hover:after:w-full">legal@rdpdatacenter.cloud</a>.
+             after:bg-amber-600 after:transition-all after:duration-200 hover:after:w-full">legal@rdpdatacenter.in</a>.
             </p>
           </section>
         </div>

@@ -1,6 +1,6 @@
 export const siteConfig = {
     name: "RDP Datacenter",
-    url: "https://rdpdatacenter.cloud",
+    url: "https://rdpdatacenter.in",
     ogImage: "https://ui.shadcn.com/og.jpg",
     description:
       "Beautifully designed components that you can copy and paste into your apps. Accessible. Customizable. Open Source.",
