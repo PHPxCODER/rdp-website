@@ -99,7 +99,7 @@ export function SignupForm() {
               <Input
                 id="email"
                 type="email"
-                placeholder="meow@rdpdatacenter.cloud"
+                placeholder="meow@rdpdatacenter.in"
                 required
               />
             </div>

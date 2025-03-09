@@ -19,15 +19,15 @@ export function Career() {
         {/* Email Section */}
         <div className="text-center mt-4">
           <p className="text-lg text-gray-700 dark:text-gray-300">
-            Feel free to send your resume and portfolio to:  
+            Feel free to send your resume and portfolio to
           </p>
           <a
-            href="mailto:career@rdpdatacenter.cloud"
+            href="mailto:career@rdpdatacenter.in"
             className="relative text-amber-600 font-semibold transition ease-in duration-200 
              after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 after:h-[2px] 
              after:bg-amber-600 after:transition-all after:duration-200 hover:after:w-full"
           >
-            career@rdpdatacenter.cloud
+            career@rdpdatacenter.in
           </a>
         </div>
 

@@ -90,9 +90,9 @@ export default function TermsAndConditions() {
           <section className="space-y-4 mt-6">
             <h2 className="text-2xl font-semibold">11. Contact Us</h2>
             <p>
-              For inquiries about these terms, email us at <a href="mailto:legal@rdpdatacenter.cloud" className="relative text-amber-600 font-semibold transition ease-in duration-200 
+              For inquiries about these terms, email us at <a href="mailto:legal@rdpdatacenter.in" className="relative text-amber-600 font-semibold transition ease-in duration-200 
              after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 after:h-[2px] 
-             after:bg-amber-600 after:transition-all after:duration-200 hover:after:w-full">legal@rdpdatacenter.cloud
+             after:bg-amber-600 after:transition-all after:duration-200 hover:after:w-full">legal@rdpdatacenter.in
               </a>.
             </p>
           </section>

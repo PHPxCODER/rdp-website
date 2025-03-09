@@ -108,7 +108,7 @@ export function SiteHeader() {
                 {/* Privacy & Other Links */}
                 <DropdownItem key="privacy" href="/Privacy">Privacy Policy</DropdownItem>
                 <DropdownItem key="t&cs" href="/T&Cs">Terms & Conditions</DropdownItem>
-                <DropdownItem key="status" href="https://status.rdpdatacenter.cloud" target="_blank">
+                <DropdownItem key="status" href="https://status.rdpdatacenter.in" target="_blank">
                   <div className="flex items-center gap-1">
                     <span>Status Page</span>
                     <RiArrowRightUpLine className="size-4" />
