@@ -27,9 +27,22 @@ export const team = [
     name: "Rahul Kose",
     role: "Co-Founder & Content Manager",
     image: "https://res.cloudinary.com/ddvheihbd/image/upload/ar_1:1,c_crop,g_north_east/team/rgxjapan",
-    linkedin: "#",
-    github: "#",
     website: "https://kandabhaja.nl",
+  },
+  {
+    name: "Arjun Ghosh",
+    role: "CFO & Director",
+    image: "https://res.cloudinary.com/ddvheihbd/image/upload/f_auto,q_auto/v1/team/arjun",
+    linkedin: "https://www.linkedin.com/in/arjungho/",
+    website: "https://agentop.codevizag.com",
+  },
+  {
+    name: "Joy Alric Kujur",
+    role: "Music Director",
+    image: "https://res.cloudinary.com/ddvheihbd/image/upload/f_auto,q_auto/v1/team/joyalric",
+    linkedin: "https://linkedin.com/in/musicbyilluzon/",
+    github: "https://github.com/JoyAlric",
+    website: "https://musicbyilluzon.in"
   },
 ];
 
