@@ -5,6 +5,7 @@ import { Button } from "@heroui/button";
 import { Skeleton } from "@heroui/skeleton";
 import { EarthIcon } from "@/components/ui/earth";
 import { GithubIcon } from "@/components/ui/github";
+import { AudioLinesIcon } from "@/components/ui/audio-lines";
 import { LinkedinIcon } from "@/components/ui/linkedin";
 import { team } from "@/config/docs";
 import { useState, useEffect } from "react";
@@ -54,15 +55,26 @@ export function Team() {
                                 </div>
                             ) : (
                                 <>
+                                    {member.linkedin && (
                                     <Button isIconOnly variant="light" href={member.linkedin} target="_blank" as="a">
                                         <LinkedinIcon size={18} />
                                     </Button>
+                                    )}
+                                    {member.github && (
                                     <Button isIconOnly variant="light" href={member.github} target="_blank" as="a">
                                         <GithubIcon size={18} />
                                     </Button>
+                                    )}
+                                    {member.soundcloud && (
+                                    <Button isIconOnly variant="light" href={member.soundcloud} target="_blank" as="a">
+                                        <AudioLinesIcon size={18} />
+                                    </Button>
+                                    )}
+                                    {member.website && (
                                     <Button isIconOnly variant="light" href={member.website} target="_blank" as="a">
                                         <EarthIcon size={18} />
                                     </Button>
+                                    )}
                                 </>
                             )}
                         </CardFooter>

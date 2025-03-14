@@ -41,7 +41,7 @@ export const team = [
     role: "Music Director",
     image: "https://res.cloudinary.com/ddvheihbd/image/upload/f_auto,q_auto/v1/team/joyalric",
     linkedin: "https://linkedin.com/in/musicbyilluzon/",
-    github: "https://github.com/JoyAlric",
+    soundcloud: "https://soundcloud.com/illuzon",
     website: "https://musicbyilluzon.in"
   },
 ];
