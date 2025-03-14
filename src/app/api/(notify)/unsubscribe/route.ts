@@ -47,7 +47,7 @@ export async function GET(req: Request) {
       console.error('Error sending unsubscribe email:', emailError);
     }
 
-    return NextResponse.redirect(`${process.env.PROD_URL}/unsubscribed?email=${encodeURIComponent(email)}`);
+    return NextResponse.redirect(`${process.env.NEXTAUTH_URL}/unsubscribed?email=${encodeURIComponent(email)}`);
   } catch (error) {
     console.error('Error Unsubscribing:', error);
     return NextResponse.json({ message: 'Internal Server Error.' }, { status: 500 });

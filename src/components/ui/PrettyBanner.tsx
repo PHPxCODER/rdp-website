@@ -4,9 +4,8 @@ import {Button, Link} from "@heroui/react";
 import {ArrowRightIcon} from "@heroui/shared-icons";
 import {clsx} from "@heroui/shared-utils";
 import NextLink from "next/link";
-
+import Newsletter from "@/components/Newsletter";
 import {FeaturesGrid} from "./features-grid";
-
 import {sectionWrapper, subtitle, title} from "@/components/primitives";
 import {GithubIcon, NextJsIcon} from "@/components/ui/heroui-icon";
 import {useIsMounted} from "@/hooks/use-is-mounted";
@@ -36,13 +35,13 @@ export const PrettyBanner = () => {
   const isMounted = useIsMounted();
 
   return (
-    <section
-      className={sectionWrapper({
+    <>
+    <section className={sectionWrapper({
         isBlurred: true,
-        class:
-          "border-t border-b border-divider px-8 w-screen flex justify-center items-center mt-16 lg:mt-44",
+        class: "mt-16 lg:mt-44 ",
       })}
     >
+    <div className=" border-t border-b px-8 w-screen flex justify-center items-center relative">
       <div className=" w-full max-w-7xl py-10 grid grid-cols-12 gap-6 md:gap-0 z-20">
         <div className="flex flex-col gap-2 col-span-12 md:col-span-6">
           <div className="flex flex-col">
@@ -95,6 +94,7 @@ export const PrettyBanner = () => {
           />
         </div>
       </div>
+      </div>
       <div
         className={clsx(
           "absolute -top-20 lg:top-10 -translate-y-1/2 w-screen h-screen -z-50 opacity-0",
@@ -106,6 +106,9 @@ export const PrettyBanner = () => {
         style={{ transform: "translateY(-50%)" }} 
         data-mounted={isMounted}
       />
+      <Newsletter />
     </section>
+    
+    </>
   );
 };
