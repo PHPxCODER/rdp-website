@@ -58,10 +58,10 @@ function TeamMemberCard({ member, loading }: TeamMemberCardProps) {
     const validStatus = statusMapping[status] || "Offline";
 
     const statusText = isMobile
-        ? `${validStatus} on Discord Mobile`
+        ? `${validStatus} on Phone`
         : isDesktop
             ? `${validStatus} on Desktop`
-            : "Offline on Discord";
+            : "Zzz...";
 
     return (
         <Card
@@ -75,15 +75,19 @@ function TeamMemberCard({ member, loading }: TeamMemberCardProps) {
                     <Skeleton className="w-24 h-24 rounded-full mb-4" />
                 ) : (
                     <div className="relative">
+                        {/* Team Member Avatar */}
                         <Avatar src={member.image} size="lg" className="w-24 h-24 mb-4" />
+
+                        {/* Status Icon with Hover Tooltip */}
                         {member.discordid && (
-                            <span
-                                className={cn(
-                                    "absolute bottom-3 right-2 w-4 h-4 rounded-full",
-                                    statusColors[status]
-                                )}
-                                title={statusText}
-                            />
+                            <div className="absolute bottom-3 right-2 w-4 h-4 rounded-full ring-[3px] ring-white dark:ring-black group flex justify-center">
+                                <span className={cn("w-full h-full rounded-full", statusColors[status])}></span>
+
+                                {/* Hover Tooltip */}
+                                <div className="absolute z-10 mb-1 px-2 py-1 bg-slate-900 text-white text-xs opacity-0 group-hover:opacity-100 transition pointer-events-none bottom-full rounded-lg w-max">
+                                    {statusText}
+                                </div>
+                            </div>
                         )}
                     </div>
                 )}
