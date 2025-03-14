@@ -19,6 +19,12 @@ const statusColors: Record<string, string> = {
     offline: "bg-gray-400",
 };
 
+const statusMapping: Record<string, string> = {
+    online: "Online",
+    idle: "Idle",
+    dnd: "DND",
+};
+
 export function Team() {
     const [loading, setLoading] = useState(true);
 
@@ -46,6 +52,17 @@ function TeamMemberCard({ member, loading }: TeamMemberCardProps) {
     const { data } = useLanyard({ userId: member.discordid || "" });
     const status = data?.data?.discord_status || "offline";
 
+    const isMobile = data?.data?.active_on_discord_mobile;
+    const isDesktop = data?.data?.active_on_discord_desktop || data?.data?.active_on_discord_web;
+
+    const validStatus = statusMapping[status] || "Offline";
+
+    const statusText = isMobile
+        ? `${validStatus} on Discord Mobile`
+        : isDesktop
+            ? `${validStatus} on Desktop`
+            : "Offline on Discord";
+
     return (
         <Card
             className={cn(
@@ -62,9 +79,10 @@ function TeamMemberCard({ member, loading }: TeamMemberCardProps) {
                         {member.discordid && (
                             <span
                                 className={cn(
-                                    "absolute bottom-2 right-2 w-4 h-4 rounded-full border-2 border-white",
+                                    "absolute bottom-3 right-2 w-4 h-4 rounded-full",
                                     statusColors[status]
                                 )}
+                                title={statusText}
                             />
                         )}
                     </div>
