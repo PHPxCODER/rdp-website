@@ -6,6 +6,17 @@ export interface DocsConfig {
   chartsNav: SidebarNavItem[]
 }
 
+export interface TeamMember {
+  name: string;
+  role: string;
+  image: string;
+  linkedin?: string;
+  github?: string;
+  soundcloud?: string;
+  website?: string;
+  discordid?: string;
+}
+
 export const team = [
   {
     name: "Subhadeep Pramanik",
@@ -14,6 +25,7 @@ export const team = [
     linkedin: "https://linkedin.com/in/phpxcoder",
     github: "https://github.com/phpxcoder",
     website: "https://phpxcoder.in",
+    discordid: "697757845063729194",
   },
   {
     name: "Dinesh Yerra",
@@ -22,12 +34,14 @@ export const team = [
     linkedin: "https://linkedin.com/in/dinokage/",
     github: "https://github.com/dinokage",
     website: "https://dinokage.in",
+    discordid: "446946428158214164",
   },
   {
     name: "Rahul Kose",
     role: "Co-Founder & Content Manager",
     image: "https://res.cloudinary.com/ddvheihbd/image/upload/ar_1:1,c_crop,g_north_east/team/rgxjapan",
     website: "https://kandabhaja.nl",
+    discordid: "978013588172177428",
   },
   {
     name: "Arjun Ghosh",
@@ -35,6 +49,7 @@ export const team = [
     image: "https://res.cloudinary.com/ddvheihbd/image/upload/f_auto,q_auto/v1/team/arjun",
     linkedin: "https://www.linkedin.com/in/arjungho/",
     website: "https://agentop.codevizag.com",
+    discordid: "852588894977130516",
   },
   {
     name: "Joy Alric Kujur",
@@ -42,7 +57,8 @@ export const team = [
     image: "https://res.cloudinary.com/ddvheihbd/image/upload/f_auto,q_auto/v1/team/joyalric",
     linkedin: "https://linkedin.com/in/musicbyilluzon/",
     soundcloud: "https://soundcloud.com/illuzon",
-    website: "https://musicbyilluzon.in"
+    website: "https://musicbyilluzon.in",
+    discordid: "554958590398693388",
   },
 ];
 
