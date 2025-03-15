@@ -59,10 +59,10 @@ export const CloudGlobe: FunctionComponent = () => {
 
   return (
       <section
-        aria-labelledby="global-database-title"
-        className="relative mx-auto flex w-full flex-col items-center justify-center overflow-hidden pt-16 shadow-xl shadow-black/30 dark:shadow-gray-900/40 bg-white dark:bg-black"
+        aria-labelledby="global-datacenter-title"
+        className="relative mx-auto flex w-full flex-col items-center justify-center overflow-hidden pt-16 shadow-xl shadow-black/30 dark:shadow-gray-900/40 bg-background"
       >
-        <div className="absolute top-[17rem] size-[40rem] rounded-full bg-indigo-800 blur-3xl md:top-[20rem]" />
+        <div className="absolute top-[17rem] size-[40rem] rounded-full bg-gradient-to-b from-indigo-800 to-background blur-3xl md:top-[20rem]" />
         <ShinyText />
         <h2
           className="z-10 mt-6 inline-block bg-gradient-to-b from-gray-900 to-gray-700 dark:from-white dark:to-indigo-100 bg-clip-text px-2 text-center text-5xl font-bold tracking-tighter text-transparent md:text-8xl"
@@ -75,7 +75,7 @@ export const CloudGlobe: FunctionComponent = () => {
           style={{ width: 800, height: 800 }}
         />
         <div className="z-20 -mt-32 h-[36rem] w-full overflow-hidden md:-mt-36">
-          <div className="absolute bottom-0 h-3/5 w-full bg-gradient-to-b from-transparent dark:via-black dark:to-gray-950 via-gray-200 to-white" />
+          <div className="absolute bottom-0 h-4/6 w-full bg-gradient-to-b from-transparent via-gray-100 to-background dark:via-black dark:to-background" />
           <div className="absolute inset-x-6 bottom-12 m-auto max-w-4xl md:top-2/3">
             <div className="grid grid-cols-1 gap-x-10 gap-y-6 rounded-lg border border-white/[3%] bg-white/[1%] px-6 py-6 shadow-xl backdrop-blur md:grid-cols-3 md:p-8">
               {features.map((item) => (
