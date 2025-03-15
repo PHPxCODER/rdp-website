@@ -114,7 +114,7 @@ function TeamMemberCard({ member, loading }: TeamMemberCardProps) {
                             </Button>
                         )}
                         {member.soundcloud && (
-                            <Button isIconOnly variant="light" href={member.github} target="_blank" as="a">
+                            <Button isIconOnly variant="light" href={member.soundcloud} target="_blank" as="a">
                                 <AudioLinesIcon size={18} />
                             </Button>
                         )}
