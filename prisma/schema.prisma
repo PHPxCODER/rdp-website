@@ -40,60 +40,6 @@ model Account {
   @@id([provider, providerAccountId])
 }
 
-model Category {
-  id        String    @id @default(uuid())
-  name      String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime @updatedAt
-  Product   Product[]
-}
-
-model Inventory {
-  id        String   @id @default(uuid())
-  productId String   @unique
-  quantity  Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Product   Product  @relation(fields: [productId], references: [id])
-}
-
-model Order {
-  id          String      @id @default(uuid())
-  userId      String
-  status      OrderStatus @default(PENDING)
-  totalAmount Float
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime
-  User        User        @relation(fields: [userId], references: [id])
-  OrderItem   OrderItem[]
-}
-
-model OrderItem {
-  id        String   @id @default(uuid())
-  orderId   String
-  productId String
-  quantity  Int
-  price     Float
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Order     Order    @relation(fields: [orderId], references: [id])
-  Product   Product  @relation(fields: [productId], references: [id])
-}
-
-model Product {
-  id          String      @id @default(uuid())
-  name        String
-  description String
-  price       Float
-  imageUrl    String?
-  sku         String?      @unique
-  categoryId  String?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime @updatedAt
-  Inventory   Inventory?
-  OrderItem   OrderItem[]
-  Category    Category?   @relation(fields: [categoryId], references: [id])
-}
 
 model Session {
   sessionToken String   @unique
@@ -114,9 +60,38 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime @updatedAt
   Account       Account[]
-  Order         Order[]
   Session       Session[]
+  applications JobApplication[]
   image         String?
+}
+
+model JobListing {
+  id          String   @id @default(cuid())
+  title       String
+  department  String
+  location    String
+  description String    @db.Text
+  requirements String[] 
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  applications JobApplication[]
+}
+
+model JobApplication {
+  id          String   @id @default(cuid())
+  jobId       String
+  job         JobListing @relation(fields: [jobId], references: [id])
+  userId      String?
+  user        User?    @relation(fields: [id], references: [id])
+  fullName    String
+  email       String
+  phone       String?
+  coverLetter String?   @db.Text
+  resumeUrl   String?
+  status      String    @default("pending") // pending, reviewed, interviewed, rejected, accepted
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 
@@ -128,11 +103,6 @@ model VerificationToken {
   @@id([identifier, token])
 }
 
-enum OrderStatus {  
-  PENDING
-  COMPLETED
-  CANCELED
-}
 
 enum Role {
   USER
