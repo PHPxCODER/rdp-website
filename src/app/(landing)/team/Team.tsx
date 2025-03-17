@@ -8,7 +8,7 @@ import { EarthIcon } from "@/components/ui/earth";
 import { GithubIcon } from "@/components/ui/github";
 import { AudioLinesIcon } from "@/components/ui/audio-lines";
 import { LinkedinIcon } from "@/components/ui/linkedin";
-import { team, TeamMember } from "@/config/docs";
+import { team, TeamMember } from "@/config/team";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
