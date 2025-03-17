@@ -64,6 +64,15 @@ export const seoConfig = {
         keywords: "cloud hosting jobs, RDP Datacenter careers, VPS support jobs, work at RDP",
         priority: 0.7,
       },
+
+      team: {
+        url: "/team",
+        title: "Team Members - RDP Datacenter",
+        description:
+          "Meet the expert team behind RDP Datacenter, dedicated to providing high-performance cloud hosting solutions.",
+        keywords: "RDP Datacenter team, cloud hosting experts, VPS hosting support team, hosting professionals",
+        priority: 0.7,
+      },
     },
   };
   
