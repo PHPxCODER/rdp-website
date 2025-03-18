@@ -21,7 +21,7 @@ function CustomPrismaAdapter(p: PrismaClient): Adapter {
         return null;
       }
     },
-  } as unknown as Adapter;
+  } as Adapter;
 }
 
 export const OPTIONS: NextAuthOptions = {
