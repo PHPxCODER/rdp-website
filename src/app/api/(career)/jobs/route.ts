@@ -31,3 +31,24 @@ export async function POST(request: Request) {
         return new Response('Failed to create job', { status: 500 });
     }
 }
+
+export async function GET() {
+    try {
+      const jobs = await prisma.jobListing.findMany({
+        where: {
+          isActive: true
+        },
+        orderBy: {
+          createdAt: 'desc'
+        }
+      })
+      
+      return Response.json(jobs)
+    } catch (error) {
+      console.error('Error fetching jobs:', error)
+      return Response.json(
+        { error: 'Failed to fetch job postings' },
+        { status: 500 }
+      )
+    }
+  }

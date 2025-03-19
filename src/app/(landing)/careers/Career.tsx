@@ -3,30 +3,41 @@
 import { Button } from "@heroui/react";
 import { CheckCircle } from "lucide-react"
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-const jobPositions = [
-  {
-    id: "dev-001",
-    title: "Software Engineer",
-    description: "Develop and maintain web applications.",
-    requirements: ["Experience with React", "Knowledge of TypeScript", "Familiarity with REST APIs"],
-  },
-  {
-    id: "pm-001",
-    title: "Product Manager",
-    description: "Oversee product development from ideation to launch.",
-    requirements: ["Strong communication skills", "Experience in product management", "Ability to work with cross-functional teams"],
-  },
-  {
-    id: "des-001",
-    title: "UI/UX Designer",
-    description: "Design user interfaces and improve user experience.",
-    requirements: ["Proficiency in design tools like Figma", "Strong portfolio", "Understanding of user-centered design principles"],
-  },
-];
+type JobListing = {
+  id:          string;
+  title:       string
+  department:  string
+  location:    string
+  description: string   
+  requirements: string[] 
+}
+
 
 export function Career() {
-  const router = useRouter()
+  const [jobPositions, setJobPositions] = useState<JobListing[]>([])
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const response = await fetch('/api/jobs')
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch jobs')
+        }
+        
+        const data = await response.json()
+        setJobPositions(data)
+      } catch (err) {
+        console.error(err instanceof Error ? err.message : 'An error occurred')
+      }
+    }
+    
+    fetchJobs()
+
+  }, [])
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-7rem)] px-6">
