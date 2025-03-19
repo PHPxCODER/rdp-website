@@ -10,7 +10,7 @@ const redis = new Redis({
 
 const ratelimit = new Ratelimit({
   redis,
-  limiter: Ratelimit.fixedWindow(5, "60s"), // 5 requests per 60 seconds
+  limiter: Ratelimit.fixedWindow(3, "60s"), // 3 requests per 60 seconds
 });
 
 export async function POST(req: NextRequest) {
