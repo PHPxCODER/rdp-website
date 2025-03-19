@@ -8,6 +8,7 @@ import SignOutButton from "@/components/ui/SignoutButton";
 import {GradientBackground} from "@/components/ui/GradientBackground";
 import GreetingMessage from "@/components/ui/GreetingMessage";
 import { ConfettiFireworks } from "@/components/ui/Confetti";
+import JobPostingForm from "./JobPostingForm";
 
 export const metadata = {
   title: `Dashboard | ${siteConfig.name}`,
@@ -52,6 +53,10 @@ const DashPage = async () => {
         {/* Sign Out Button */}
         <SignOutButton />
       </div>
+      {session.user.role == "ADMIN" && <div className="mt-8 w-full max-w-3xl p-6 shadow-md rounded-lg backdrop-blur-md">
+        <h2 className="text-xl font-semibold mb-4">Add a Job Posting</h2>
+        <JobPostingForm />
+      </div>}
     </div>
   );
 };

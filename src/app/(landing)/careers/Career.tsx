@@ -1,6 +1,33 @@
+"use client"
+
+import { Button } from "@heroui/react";
 import { CheckCircle } from "lucide-react"
+import { useRouter } from "next/navigation";
+
+const jobPositions = [
+  {
+    id: "dev-001",
+    title: "Software Engineer",
+    description: "Develop and maintain web applications.",
+    requirements: ["Experience with React", "Knowledge of TypeScript", "Familiarity with REST APIs"],
+  },
+  {
+    id: "pm-001",
+    title: "Product Manager",
+    description: "Oversee product development from ideation to launch.",
+    requirements: ["Strong communication skills", "Experience in product management", "Ability to work with cross-functional teams"],
+  },
+  {
+    id: "des-001",
+    title: "UI/UX Designer",
+    description: "Design user interfaces and improve user experience.",
+    requirements: ["Proficiency in design tools like Figma", "Strong portfolio", "Understanding of user-centered design principles"],
+  },
+];
 
 export function Career() {
+  const router = useRouter()
+
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-7rem)] px-6">
       <div className="max-w-2xl w-full text-justify">
@@ -53,6 +80,22 @@ export function Career() {
             </li>
           </ul>
         </div>
+      </div>
+      <div className="mt-8 w-full max-w-2xl">
+        {jobPositions.map((position, index) => (
+          <div key={index} className="border border-gray-300 dark:border-gray-700 rounded-lg p-4 mb-4">
+        <h2 className="text-2xl font-semibold mb-2">{position.title}</h2>
+        <p className="text-gray-700 dark:text-gray-300 mb-2">{position.description}</p>
+        <ul className="list-disc list-inside text-gray-700 dark:text-gray-300">
+          {position.requirements.map((requirement, reqIndex) => (
+            <li key={reqIndex}>{requirement}</li>
+          ))}
+        <div className="flex justify-end mt-2">
+          <Button onPress={() => router.push(`/careers/apply/${position.id}`)}>Apply</Button>
+        </div>
+        </ul>
+          </div>
+        ))}
       </div>
     </div>
   );
