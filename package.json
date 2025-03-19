@@ -35,6 +35,8 @@
     "@react-three/drei": "^9.117.3",
     "@react-three/fiber": "^8.17.10",
     "@remixicon/react": "^4.6.0",
+    "@upstash/ratelimit": "^2.0.5",
+    "@upstash/redis": "^1.34.5",
     "@vercel/analytics": "^1.4.1",
     "@vercel/speed-insights": "^1.1.0",
     "axios": "^1.7.8",

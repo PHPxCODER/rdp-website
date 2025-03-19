@@ -102,8 +102,19 @@ export function SigninForm() {
         },
         body: JSON.stringify({ email }),
       })
+
+      if (checkUserResponse.status === 429) {
+        toast({
+          title: "Slow Down",
+          description: "You're making too many requests. Please wait a minute.",
+          variant: "destructive",
+        });
+        setIsSubmitting(false);
+        return;
+      }
   
-      const { exists } = await checkUserResponse.json()
+      const data = await checkUserResponse.json();
+      const { exists } = data;
   
       if (!exists) {
         toast({
