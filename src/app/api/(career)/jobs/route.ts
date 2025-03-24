@@ -1,54 +1,81 @@
-import { prisma } from '@/lib/prisma';
-
-export async function POST(request: Request) {
-    try {
-        const formData = await request.formData();
-        const id = formData.get('id') as string;
-        const title = formData.get('title') as string;
-        const department = formData.get('department') as string;
-        const location = formData.get('location') as string;
-        const description = formData.get('description') as string;
-        const requirements = formData
-            .get('requirements')
-            ?.toString()
-            .split(',')
-            .map(req => req.trim()) as string[];
-
-        const job = await prisma.jobListing.create({
-            data: {
-                id,
-                title,
-                department,
-                location,
-                description,
-                requirements: { set: requirements },
-            },
-        });
-
-        return new Response(JSON.stringify(job), { status: 201 });
-    } catch (error) {
-        console.error(error);
-        return new Response('Failed to create job', { status: 500 });
-    }
-}
+// src/app/api/admin/jobs/route.ts
+import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth/next";
+import { OPTIONS } from "@/auth.config";
+import { prisma } from "@/lib/prisma";
 
 export async function GET() {
-    try {
-      const jobs = await prisma.jobListing.findMany({
-        where: {
-          isActive: true
-        },
-        orderBy: {
-          createdAt: 'desc'
-        }
-      })
-      
-      return Response.json(jobs)
-    } catch (error) {
-      console.error('Error fetching jobs:', error)
-      return Response.json(
-        { error: 'Failed to fetch job postings' },
-        { status: 500 }
-      )
+  try {
+    const session = await getServerSession(OPTIONS);
+
+    // Check for authentication and authorization
+    if (!session) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
+
+    if (session.user.role !== "ADMIN" && session.user.role !== "MGMT") {
+      return NextResponse.json({ error: "Not authorized" }, { status: 403 });
+    }
+
+    // Fetch all job listings
+    const jobs = await prisma.jobListing.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return NextResponse.json(jobs);
+  } catch (error) {
+    console.error("Error fetching jobs:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    const session = await getServerSession(OPTIONS);
+
+    // Check for authentication and authorization
+    if (!session) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+    }
+
+    if (session.user.role !== "ADMIN" && session.user.role !== "MGMT") {
+      return NextResponse.json({ error: "Not authorized" }, { status: 403 });
+    }
+
+    // Get job data from request body
+    const jobData = await req.json();
+
+    // Validate required fields
+    if (!jobData.title || !jobData.department || !jobData.location || !jobData.description) {
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    // Create new job listing
+    const job = await prisma.jobListing.create({
+      data: {
+        title: jobData.title,
+        department: jobData.department,
+        location: jobData.location,
+        description: jobData.description,
+        requirements: jobData.requirements || [],
+        isActive: jobData.isActive ?? true,
+      },
+    });
+
+    return NextResponse.json(job, { status: 201 });
+  } catch (error) {
+    console.error("Error creating job:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
