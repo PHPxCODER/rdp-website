@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -17,7 +11,7 @@ model Subscriber {
   id          Int      @id @default(autoincrement())
   email       String   @unique
   token       String   @unique @default(uuid())
-  tokenExpiry DateTime @default(now()) // Set expiry time
+  tokenExpiry DateTime @default(now())
   createdAt   DateTime @default(now())
 }
 
@@ -40,7 +34,6 @@ model Account {
   @@id([provider, providerAccountId])
 }
 
-
 model Session {
   sessionToken String   @unique
   userId       String
@@ -51,49 +44,48 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(uuid())
-  email         String    @unique
+  id            String          @id @default(uuid())
+  email         String          @unique
   emailVerified DateTime?
   name          String?
-  phoneNumber   String?   // Add the phone number field here
-  role          Role      @default(USER)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime @updatedAt
-  Account       Account[]
-  Session       Session[]
-  applications JobApplication[]
+  phoneNumber   String?
+  role          Role            @default(USER)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
   image         String?
+  Account       Account[]
+  applications  JobApplication?
+  Session       Session[]
 }
 
 model JobListing {
-  id          String   @id @default(cuid())
-  title       String
-  department  String
-  location    String
-  description String    @db.Text
-  requirements String[] 
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String           @id @default(cuid())
+  title        String
+  department   String
+  location     String
+  description  String
+  requirements String[]
+  isActive     Boolean          @default(true)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
   applications JobApplication[]
 }
 
 model JobApplication {
-  id          String   @id @default(cuid())
+  id          String     @id @default(cuid())
   jobId       String
-  job         JobListing @relation(fields: [jobId], references: [id])
   userId      String?
-  user        User?    @relation(fields: [id], references: [id])
   fullName    String
   email       String
   phone       String?
-  coverLetter String?   @db.Text
+  coverLetter String?
   resumeUrl   String?
-  status      String    @default("pending") // pending, reviewed, interviewed, rejected, accepted
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  status      String     @default("pending")
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  user        User       @relation(fields: [id], references: [id])
+  job         JobListing @relation(fields: [jobId], references: [id])
 }
-
 
 model VerificationToken {
   identifier String
@@ -102,7 +94,6 @@ model VerificationToken {
 
   @@id([identifier, token])
 }
-
 
 enum Role {
   USER
