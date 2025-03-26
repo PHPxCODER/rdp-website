@@ -225,6 +225,18 @@ export function SigninForm() {
     }
   }
 
+  const handleOtpPaste = (
+    e: React.ClipboardEvent<HTMLInputElement>,
+    onChange: (value: string) => void
+  ) => {
+    e.preventDefault();
+    const pastedText = e.clipboardData.getData("text").replace(/-/g, ""); // Remove dashes
+  
+    if (pastedText.length === 6) {
+      onChange(pastedText);
+    }
+  };
+  
   return (
     <div className="relative flex items-center justify-center">
       <GradientBackground />
@@ -290,7 +302,7 @@ export function SigninForm() {
                   <FormItem>
                     <FormLabel>One-Time Password</FormLabel>
                     <FormControl>
-                      <InputOTP maxLength={6} {...field}>
+                      <InputOTP maxLength={6} {...field} onPaste={(e) => handleOtpPaste(e, field.onChange)}>
                         <InputOTPGroup>
                           <InputOTPSlot index={0} />
                           <InputOTPSlot index={1} />

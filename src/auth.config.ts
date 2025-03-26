@@ -1,3 +1,4 @@
+import { generateOTP, html } from "@/lib/emailTemplate";
 import EmailProvider from "next-auth/providers/email";
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
@@ -6,7 +7,6 @@ import { Adapter } from "next-auth/adapters";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import { randomInt } from "crypto";
 import { createTransport } from "nodemailer";
 
 function CustomPrismaAdapter(p: PrismaClient): Adapter {
@@ -25,7 +25,8 @@ function CustomPrismaAdapter(p: PrismaClient): Adapter {
 }
 
 export const OPTIONS: NextAuthOptions = {
-    adapter: CustomPrismaAdapter(prisma),
+  adapter: CustomPrismaAdapter(prisma),
+  secret: process.env.NEXTAUTH_SECRET,
 
   providers: [
     GoogleProvider({
@@ -66,8 +67,7 @@ export const OPTIONS: NextAuthOptions = {
         await transport.sendMail({
           to: email,
           from,
-          subject: `Sign in to ${host}`,
-          text: text({ token, host }),
+          subject: `Sign in to RDP Datacenter`,
           html: html({ token, host }),
         });
       },
@@ -101,7 +101,7 @@ export const OPTIONS: NextAuthOptions = {
       const user = await prisma.user.findUnique({
         where: { id: token.id },
       });
-    
+
       // If the user exists in the database, update the session object
       if (user) {
         session.user.id = user.id; // Assume user.id is always a string
@@ -114,65 +114,10 @@ export const OPTIONS: NextAuthOptions = {
         session.user.updatedAt = user.updatedAt; // Handle according to your needs
         session.user.image = user.image ?? ''; // Default to empty string if null
       }
-    
+
       return session;
-    },    
+    },
   },
 };
-
-function generateOTP() {
-  return randomInt(100000, 999999);
-}
-
-function html(params: { token: string; host: string }) {
-  const { token, host } = params;
-
-  const escapedHost = host.replace(/\./g, "&#8203;.");
-
-  const color = {
-    background: "#f9f9f9",
-    text: "#444",
-    mainBackground: "#fff",
-  };
-
-  return `
-  <body style="background: ${color.background};">
-    <table width="100%" border="0" cellspacing="20" cellpadding="0"
-      style="background: ${color.mainBackground}; max-width: 600px; margin: auto; border-radius: 10px;">
-      <tr>
-        <td align="center"
-          style="padding: 10px 0px; font-size: 22px; font-family: Helvetica, Arial, sans-serif; color: ${color.text};">
-          Sign in to <strong>${escapedHost}</strong>
-        </td>
-      </tr>
-      <tr>
-        <td align="center" style="padding: 20px 0;">
-          <table border="0" cellspacing="0" cellpadding="0">
-            <tr>
-              <td align="center"><strong>Sign in code:</strong> ${token}</td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-      <tr>
-        <td align="center"
-          style="padding: 0px 0px 10px 0px; font-size: 16px; line-height: 22px; font-family: Helvetica, Arial, sans-serif; color: ${color.text};">
-          Keep in mind that this code will expire after <strong><em>3 minutes</em></strong>. If you did not request this email you can safely ignore it.
-        </td>
-      </tr>
-    </table>
-  </body>
-  `;
-}
-
-function text(params: { token: string; host: string }) {
-  return `
-  Sign in to ${params.host}
-
-  Sign in code: ${params.token}
-
-  Keep in mind that this code will expire after 3 minutes. If you did not request this email you can safely ignore it.
-  `;
-}
 
 export const authOptions = OPTIONS;
