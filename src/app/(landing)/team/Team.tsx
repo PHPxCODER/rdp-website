@@ -11,6 +11,8 @@ import { LinkedinIcon } from "@/components/ui/linkedin";
 import { team, TeamMember } from "@/config/team";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { InfoIcon } from "lucide-react";
 
 const statusColors: Record<string, string> = {
     online: "bg-emerald-500",
@@ -62,6 +64,9 @@ function TeamMemberCard({ member, loading }: TeamMemberCardProps) {
         : isDesktop
             ? `${validStatus} on Desktop`
             : "Zzz...";
+            
+    // Generate member page slug
+    const memberSlug = member.name.toLowerCase().replace(/\s+/g, "-");
 
     return (
         <Card
@@ -94,7 +99,7 @@ function TeamMemberCard({ member, loading }: TeamMemberCardProps) {
                 {loading ? <Skeleton className="w-40 h-7 rounded mb-2" /> : <h2 className="text-xl font-semibold">{member.name}</h2>}
                 {loading ? <Skeleton className="w-28 h-5 rounded" /> : <p className="text-gray-500 text-sm">{member.role}</p>}
             </CardHeader>
-            <CardFooter className="flex justify-center gap-3">
+            <CardFooter className="flex justify-center gap-3 flex-wrap">
                 {loading ? (
                     <div className="flex gap-3">
                         <Skeleton className="w-10 h-10 rounded-full" />
@@ -103,6 +108,12 @@ function TeamMemberCard({ member, loading }: TeamMemberCardProps) {
                     </div>
                 ) : (
                     <>
+                        <Link href={`/team/${memberSlug}`} passHref>
+                            <Button isIconOnly variant="light" title="View Profile">
+                                <InfoIcon size={18} />
+                            </Button>
+                        </Link>
+                        
                         {member.linkedin && (
                             <Button isIconOnly variant="light" href={member.linkedin} target="_blank" as="a">
                                 <LinkedinIcon size={18} />
