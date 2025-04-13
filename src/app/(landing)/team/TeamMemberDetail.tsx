@@ -9,9 +9,9 @@ import { EarthIcon } from "@/components/ui/earth";
 import { GithubIcon } from "@/components/ui/github";
 import { AudioLinesIcon } from "@/components/ui/audio-lines";
 import { LinkedinIcon } from "@/components/ui/linkedin";
-import { ArrowLeftIcon } from "lucide-react";
+import { ArrowLeftIcon, MapPinIcon } from "lucide-react";
 import Link from "next/link";
-import { TeamMember } from "@/config/team";
+import { TeamMember, teamMemberDetails } from "@/config/team";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 
@@ -19,69 +19,7 @@ interface TeamMemberDetailProps {
   member: TeamMember;
 }
 
-// Add missing team member descriptions
-const memberDescriptions: Record<string, { description: string; achievements: string[], skills: string[] }> = {
-  "Subhadeep Pramanik": {
-    description: "Subhadeep is the founder of RDP Datacenter with over 10 years of experience in cloud infrastructure and systems architecture. His vision is to build scalable, secure, and affordable cloud hosting solutions for businesses of all sizes. He has a deep expertise in network optimization, containerization, and distributed systems.",
-    achievements: [
-      "Led the development of our proprietary cloud management platform",
-      "Designed our core infrastructure architecture that powers thousands of instances",
-      "Established strategic partnerships with key technology providers",
-      "Pioneered our multi-region deployment strategy for enhanced reliability"
-    ],
-    skills: [
-      "Cloud Architecture", "Kubernetes", "DevOps", "System Design", "Network Security"
-    ]
-  },
-  "Dinesh Yerra": {
-    description: "As Co-Founder and CTO, Dinesh leads the technical direction of RDP Datacenter. With a background in distributed systems and cloud-native technologies, he oversees the development of our platform infrastructure. Dinesh is passionate about leveraging cutting-edge technologies to solve complex hosting challenges for our clients.",
-    achievements: [
-      "Architected our zero-downtime deployment system",
-      "Implemented advanced security protocols across our platform",
-      "Developed our automated scaling infrastructure",
-      "Published research on cloud optimization techniques"
-    ],
-    skills: [
-      "System Architecture", "Go/Rust Programming", "Database Design", "Infrastructure as Code", "Performance Optimization"
-    ]
-  },
-  "Rahul Kose": {
-    description: "Rahul manages our content strategy and customer communications as Co-Founder and Content Manager. With a background in technical writing and UX design, he ensures our complex technology is explained clearly to users of all technical levels. His focus is on creating educational resources that help customers maximize their experience with our platform.",
-    achievements: [
-      "Developed our comprehensive knowledge base and documentation",
-      "Created user onboarding flows that increased retention by 42%",
-      "Launched our technical blog with over 100,000 monthly readers",
-      "Established our content localization strategy for global markets"
-    ],
-    skills: [
-      "Technical Writing", "UX Design", "Content Strategy", "Customer Education", "Information Architecture"
-    ]
-  },
-  "Arjun Ghosh": {
-    description: "As CFO and Director, Arjun oversees the financial operations and strategic business planning of RDP Datacenter. With experience in technology investment and financial management, he ensures our growth is sustainable while developing pricing models that deliver maximum value to our customers.",
-    achievements: [
-      "Secured Series A funding to expand our data center footprint",
-      "Developed our tiered pricing strategy that increased profitability by 35%",
-      "Led our expansion into emerging markets",
-      "Implemented financial systems that support our rapid scaling"
-    ],
-    skills: [
-      "Financial Strategy", "Business Development", "Investment Planning", "Risk Management", "Market Analysis"
-    ]
-  },
-  "Joy Alric Kujur": {
-    description: "Joy brings a unique perspective as our Music Director, creating audio experiences for our brand and events. His background in audio engineering and digital sound design has helped establish our distinctive brand identity through custom soundscapes and audio notifications within our platform.",
-    achievements: [
-      "Created our signature audio branding elements",
-      "Designed our event soundscapes that increased attendee engagement",
-      "Developed audio notification system for our monitoring tools",
-      "Composed original music for our product videos and marketing content"
-    ],
-    skills: [
-      "Audio Production", "Sound Design", "Music Composition", "Audio Engineering", "Brand Sound Identity"
-    ]
-  }
-};
+
 
 const statusColors: Record<string, string> = {
   online: "bg-emerald-500",
@@ -100,6 +38,8 @@ export default function TeamMemberDetail({ member }: TeamMemberDetailProps) {
   const [loading, setLoading] = useState(true);
   const { data } = useLanyard({ userId: member.discordid || "" });
   const status = data?.data?.discord_status || "offline";
+  const city = data?.data?.kv?.city || null;
+
 
   const isMobile = data?.data?.active_on_discord_mobile;
   const isDesktop = data?.data?.active_on_discord_desktop || data?.data?.active_on_discord_web;
@@ -112,7 +52,7 @@ export default function TeamMemberDetail({ member }: TeamMemberDetailProps) {
       ? `${validStatus} on Desktop`
       : "Zzz...";
 
-  const memberInfo = memberDescriptions[member.name] || {
+  const memberInfo = teamMemberDetails[member.name] || {
     description: "Team member at RDP Datacenter working on our cloud infrastructure and services.",
     achievements: ["Contributing to our cloud platform development"],
     skills: ["Cloud Infrastructure", "Team Collaboration"]
@@ -168,12 +108,21 @@ export default function TeamMemberDetail({ member }: TeamMemberDetailProps) {
             {loading ? (
               <>
                 <Skeleton className="h-8 w-48 mb-2" />
-                <Skeleton className="h-6 w-32 mb-4" />
+                <Skeleton className="h-5 w-32 mb-2 rounded-sm" />
+                <Skeleton className="h-4 w-24 mb-4 rounded-sm" />
               </>
             ) : (
               <>
                 <h1 className="text-3xl font-bold">{member.name}</h1>
-                <p className="text-xl text-gray-500 dark:text-gray-400 mb-4">{member.role}</p>
+                <p className="text-xl text-gray-500 dark:text-gray-400 mb-1">{member.role}</p>
+                
+                {city && (
+                  <div className="flex items-center justify-center md:justify-start gap-1 text-gray-400 dark:text-gray-500 mb-4">
+                    <MapPinIcon size={14} />
+                    <span className="text-sm">{city}</span>
+                  </div>
+                )}
+                {!city && <div className="mb-4"></div>}
               </>
             )}
             
