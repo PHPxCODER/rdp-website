@@ -36,6 +36,7 @@ import { GradientBackground } from "@/components/ui/GradientBackground"
 import { useRouter } from "next/navigation"
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
+import { RiLoginCircleLine } from "react-icons/ri";
 
 const OTPFormSchema = z.object({
   pin: z.string().min(6, {
@@ -52,8 +53,10 @@ export function SigninForm() {
   const router = useRouter()
   const [isGoogleLoading, setIsGoogleLoading] = useState(false)
   const [isGithubLoading, setIsGithubLoading] = useState(false)
+  const [isCognitoLoading, setIsCognitoLoading] = useState(false)
   const GoogleIcon = () => <FcGoogle size={24} />;
   const GithubIcon = () => <FaGithub size={24} />;
+  const SsoIcon = () => <RiLoginCircleLine size={24} className="text-blue-500" />;
 
   const form = useForm<z.infer<typeof OTPFormSchema>>({
     resolver: zodResolver(OTPFormSchema),
@@ -216,10 +219,26 @@ export function SigninForm() {
     if (result?.error) {
       toast({
         title: "GitHub OAuth Error",
-        description: "There was an issue signing in with Google. Please try again.",
+        description: "There was an issue signing in with GitHub. Please try again.",
         variant: "destructive",
       })
       setIsGithubLoading(false)
+    } else if (result?.url) {
+      router.push(result.url)
+    }
+  }
+
+  // Function to handle AWS Cognito sign-in
+  const handleCognitoSignIn = async () => {
+    setIsCognitoLoading(true)
+    const result = await signIn("cognito", { callbackUrl: "/dash", redirect: false })
+    if (result?.error) {
+      toast({
+        title: "RDP SSO Error",
+        description: "There was an issue signing in with RDP SSO. Please try again.",
+        variant: "destructive",
+      })
+      setIsCognitoLoading(false)
     } else if (result?.url) {
       router.push(result.url)
     }
@@ -289,6 +308,11 @@ export function SigninForm() {
               <Button onPress={handleGithubSignIn} isLoading={isGithubLoading} disabled={isGithubLoading} variant="light" radius="full" className="w-full" type="button">
                 {!isGithubLoading && <GithubIcon />}
                 Signin with Github
+              </Button>
+
+              <Button onPress={handleCognitoSignIn} isLoading={isCognitoLoading} disabled={isCognitoLoading} variant="light" radius="full" className="w-full" type="button">
+                {!isCognitoLoading && <SsoIcon />}
+                RDP Single Sign-On
               </Button>
             </div>
           </form>

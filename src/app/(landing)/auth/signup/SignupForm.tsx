@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label"
 import { useRouter } from "next/navigation"
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
+import { RiLoginCircleLine } from "react-icons/ri";
 
 export const description =
   "A sign up form with first name, last name, email and password inside a card. There's an option to sign up with GitHub and a link to login if you already have an account"
@@ -27,8 +28,10 @@ export function SignupForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isGoogleLoading, setIsGoogleLoading] = useState(false)
   const [isGithubLoading, setIsGithubLoading] = useState(false)
+  const [isCognitoLoading, setIsCognitoLoading] = useState(false)
   const GoogleIcon = () => <FcGoogle size={24} />;
   const GithubIcon = () => <FaGithub size={24} />;
+  const SsoIcon = () => <RiLoginCircleLine size={24} className="text-blue-500" />;
 
   const handleCreateAccount = () => {
     setIsSubmitting(true)
@@ -72,6 +75,22 @@ export function SignupForm() {
       router.push(result.url)
     }
   }
+
+  const handleCognitoSignIn = async () => {
+    setIsCognitoLoading(true)
+    const result = await signIn("cognito", { callbackUrl: "/dash", redirect: false })
+    if (result?.error) {
+      toast({
+        title: "RDP SSO Error",
+        description: "There was an issue signing in with RDP SSO. Please try again.",
+        variant: "destructive",
+      })
+      setIsCognitoLoading(false)
+    } else if (result?.url) {
+      router.push(result.url)
+    }
+  }
+
   return (
     <div className="relative flex items-center justify-center">
       <GradientBackground />
@@ -124,12 +143,17 @@ export function SignupForm() {
             
             <Button onPress={handleGoogleSignIn} isLoading={isGoogleLoading} disabled={isGoogleLoading} variant="light" radius="full" className="flex items-center gap-2">
               {!isGoogleLoading && <GoogleIcon />}
-              Sign up with Google
+              Signup with Google
             </Button>
 
             <Button onPress={handleGithubSignIn} isLoading={isGithubLoading} disabled={isGithubLoading} variant="light" radius="full" className="flex items-center gap-2">
               {!isGithubLoading && <GithubIcon />}
-              Sign up with Github
+              Signup with Github
+            </Button>
+
+            <Button onPress={handleCognitoSignIn} isLoading={isCognitoLoading} disabled={isCognitoLoading} variant="light" radius="full" className="flex items-center gap-2">
+              {!isCognitoLoading && <SsoIcon />}
+              RDP Single Sign-On
             </Button>
           </div>
           <div className="mt-4 text-center text-sm">

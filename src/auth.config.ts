@@ -3,6 +3,7 @@ import EmailProvider from "next-auth/providers/email";
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
+import CognitoProvider from "next-auth/providers/cognito";
 import { Adapter } from "next-auth/adapters";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
@@ -40,6 +41,12 @@ export const OPTIONS: NextAuthOptions = {
     GithubProvider({
       clientId: process.env.AUTH_GITHUB_ID as string,
       clientSecret: process.env.AUTH_GITHUB_SECRET as string,
+      allowDangerousEmailAccountLinking: true,
+    }),
+    CognitoProvider({
+      clientId: process.env.AUTH_COGNITO_ID as string,
+      clientSecret: process.env.AUTH_COGNITO_SECRET as string,
+      issuer: process.env.AUTH_COGNITO_ISSUER as string,
       allowDangerousEmailAccountLinking: true,
     }),
     EmailProvider({
