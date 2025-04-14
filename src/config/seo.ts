@@ -73,6 +73,51 @@ export const seoConfig = {
         keywords: "RDP Datacenter team, cloud hosting experts, VPS hosting support team, hosting professionals",
         priority: 0.7,
       },
+      
+      subhadeep: {
+        url: "/team/subhadeep-pramanik",
+        title: "Subhadeep Pramanik - Founder | RDP Datacenter",
+        description:
+          "Subhadeep Pramanik is the Founder of RDP Datacenter with expertise in cloud infrastructure and systems architecture.",
+        keywords: "Subhadeep Pramanik, RDP Datacenter founder, cloud architect, systems design",
+        priority: 0.6,
+      },
+      
+      dinesh: {
+        url: "/team/dinesh-yerra",
+        title: "Dinesh Yerra - Co-Founder & CTO | RDP Datacenter",
+        description:
+          "Dinesh Yerra is the Co-Founder and CTO of RDP Datacenter, specializing in distributed systems and cloud-native technologies.",
+        keywords: "Dinesh Yerra, RDP Datacenter CTO, cloud-native expert, distributed systems",
+        priority: 0.6,
+      },
+      
+      rahul: {
+        url: "/team/rahul-kose",
+        title: "Rahul Kose - Co-Founder & Content Manager | RDP Datacenter",
+        description:
+          "Rahul Kose manages content strategy and customer communications as Co-Founder and Content Manager at RDP Datacenter.",
+        keywords: "Rahul Kose, RDP Datacenter content manager, content strategy, technical writing",
+        priority: 0.6,
+      },
+      
+      arjun: {
+        url: "/team/arjun-ghosh",
+        title: "Arjun Ghosh - CFO & Director | RDP Datacenter",
+        description:
+          "Arjun Ghosh oversees financial operations and strategic business planning as CFO and Director of RDP Datacenter.",
+        keywords: "Arjun Ghosh, RDP Datacenter CFO, financial strategy, cloud business development",
+        priority: 0.6,
+      },
+      
+      joy: {
+        url: "/team/joy-alric-kujur",
+        title: "Joy Alric Kujur - Audio & Acoustic Systems Lead | RDP Datacenter",
+        description:
+          "Joy Alric Kujur leads Audio & Acoustic Systems at RDP Datacenter, applying sound design expertise to enhance operations.",
+        keywords: "Joy Alric Kujur, audio engineering, acoustic design, RDP Datacenter audio lead, Illuzon",
+        priority: 0.6,
+      },
     },
   };
   

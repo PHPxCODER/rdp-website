@@ -11,8 +11,8 @@ import { LinkedinIcon } from "@/components/ui/linkedin";
 import { team, TeamMember } from "@/config/team";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 import { InfoIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const statusColors: Record<string, string> = {
     online: "bg-emerald-500",
@@ -51,6 +51,7 @@ interface TeamMemberCardProps {
 }
 
 function TeamMemberCard({ member, loading }: TeamMemberCardProps) {
+    const router = useRouter();
     const { data } = useLanyard({ userId: member.discordid || "" });
     const status = data?.data?.discord_status || "offline";
 
@@ -67,6 +68,11 @@ function TeamMemberCard({ member, loading }: TeamMemberCardProps) {
             
     // Generate member page slug
     const memberSlug = member.name.toLowerCase().replace(/\s+/g, "-");
+    
+    // Handle profile view navigation
+    const handleProfileView = () => {
+        router.push(`/team/${memberSlug}`);
+    };
 
     return (
         <Card
@@ -80,8 +86,13 @@ function TeamMemberCard({ member, loading }: TeamMemberCardProps) {
                     <Skeleton className="w-24 h-24 rounded-full mb-4" />
                 ) : (
                     <div className="relative">
-                        {/* Team Member Avatar */}
-                        <Avatar src={member.image} size="lg" className="w-24 h-24 mb-4" />
+                        {/* Team Member Avatar - Make clickable for profile navigation */}
+                        <div 
+                            onClick={handleProfileView}
+                            className="cursor-pointer"
+                        >
+                            <Avatar src={member.image} size="lg" className="w-24 h-24 mb-4" />
+                        </div>
 
                         {/* Status Icon with Hover Tooltip */}
                         {member.discordid && (
@@ -96,7 +107,17 @@ function TeamMemberCard({ member, loading }: TeamMemberCardProps) {
                         )}
                     </div>
                 )}
-                {loading ? <Skeleton className="w-40 h-7 rounded mb-2" /> : <h2 className="text-xl font-semibold">{member.name}</h2>}
+                {loading ? (
+                    <Skeleton className="w-40 h-7 rounded mb-2" />
+                ) : (
+                    // Make name clickable for profile navigation
+                    <h2 
+                        className="text-xl font-semibold cursor-pointer hover:underline" 
+                        onClick={handleProfileView}
+                    >
+                        {member.name}
+                    </h2>
+                )}
                 {loading ? <Skeleton className="w-28 h-5 rounded" /> : <p className="text-gray-500 text-sm">{member.role}</p>}
             </CardHeader>
             <CardFooter className="flex justify-center gap-3 flex-wrap">
@@ -108,11 +129,15 @@ function TeamMemberCard({ member, loading }: TeamMemberCardProps) {
                     </div>
                 ) : (
                     <>
-                        <Link href={`/team/${memberSlug}`} passHref>
-                            <Button isIconOnly variant="light" title="View Profile">
-                                <InfoIcon size={18} />
-                            </Button>
-                        </Link>
+                        {/* Changed from Link+Button combo to just Button with onClick handler */}
+                        <Button 
+                            isIconOnly 
+                            variant="light" 
+                            title="View Profile"
+                            onPress={handleProfileView}
+                        >
+                            <InfoIcon size={18} />
+                        </Button>
                         
                         {member.linkedin && (
                             <Button isIconOnly variant="light" href={member.linkedin} target="_blank" as="a">
