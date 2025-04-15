@@ -6,7 +6,7 @@ import { headers } from "next/headers"
 
 const navigation = {
   product: [
-    { name: "Enterprise", href: "#", external: false },
+    { name: "Storage", href: "https://cloud.rdpdatacenter.in", external: true },
     { name: "Pricing", href: "/pricing", external: false },
     { name: "Docs", href: "/docs", external: false },
     { name: "Changelog", href: "#", external: false },
@@ -24,10 +24,10 @@ const navigation = {
     { name: "Status", href: "https://status.rdpdatacenter.in", external: true },
   ],
   legal: [
+    { name: "Contact", href: "/Contact", external: false },
     { name: "Privacy", href: "/Privacy", external: false },
     { name: "Terms", href: "/T&Cs", external: false },
-    { name: "Sitemap", href: "/sitemap.xml", external: false },
-    { name: "Imprint", href: "#", external: false },
+    { name: "Sitemap", href: "/sitemap", external: false },
   ],
 }
 
