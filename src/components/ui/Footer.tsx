@@ -3,6 +3,7 @@ import Link from "next/link"
 import { DatabaseLogo } from "../../../public/DatabaseLogo"
 import ThemeSwitch from "@/components/ThemeSwitch"
 import { headers } from "next/headers"
+import { FaXTwitter, FaDiscord, FaGithub, FaLinkedin } from "react-icons/fa6"
 
 const navigation = {
   product: [
@@ -12,10 +13,10 @@ const navigation = {
     { name: "Changelog", href: "#", external: false },
   ],
   social: [
-    { name: "X", href: "https://x.com/rdpdatacenter", external: true },
-    { name: "GitHub", href: "https://github.com/rdp-datacenter", external: true },
-    { name: "Discord", href: "https://discord.gg/FS9CMpDB95", external: true },
-    { name: "YouTube", href: "#", external: false },
+    { name: "X", href: "https://x.com/rdpdatacenter", external: true, icon: <FaXTwitter className="size-4" /> },
+    { name: "GitHub", href: "https://github.com/rdp-datacenter", external: true, icon: <FaGithub className="size-4" /> },
+    { name: "Discord", href: "https://discord.gg/FS9CMpDB95", external: true, icon: <FaDiscord className="size-4" /> },
+    { name: "Linkedin", href: "https://linkedin.com/company/rdp-datacenter", external: true, icon: <FaLinkedin className="size-4" /> },
   ],
   company: [
     { name: "About", href: "/about", external: false },
@@ -27,7 +28,7 @@ const navigation = {
     { name: "Contact", href: "/Contact", external: false },
     { name: "Privacy", href: "/Privacy", external: false },
     { name: "Terms", href: "/T&Cs", external: false },
-    { name: "Sitemap", href: "/sitemap", external: false },
+    { name: "Sitemap", href: "/Sitemap", external: false },
   ],
 }
 
@@ -97,150 +98,123 @@ async function StatusIndicator() {
 export function Footer() {
   return (
     <footer id="footer">
-      <div className="mx-auto max-w-6xl px-3 pb-8 pt-16 sm:pt-24 lg:pt-32 relative z-10">
-        <div className="xl:grid xl:grid-cols-3 xl:gap-20">
-          <div className="space-y-8">
-            <DatabaseLogo className="w-32 sm:w-40" />
-            <p className="text-sm leading-6 text-gray-600 dark:text-gray-400">
-            Trusted by developers, designed for the future. 
-            Built in India, made for the world.
+      {/* Main footer content */}
+      <div className="mx-auto max-w-7xl px-6 pb-8 pt-16 sm:pt-20 lg:px-8 lg:pt-24 relative z-10">
+        {/* Top section with logo and content */}
+        <div className="xl:grid xl:grid-cols-3 xl:gap-8">
+          <div className="space-y-6">
+            <div className="flex items-center">
+              <DatabaseLogo className="w-36 sm:w-40" />
+            </div>
+            <p className="max-w-md text-sm leading-6 text-gray-600 dark:text-gray-400">
+              Trusted by developers, designed for the future. 
+              Built in India, made for the world.
             </p>
             <div className="flex space-x-6">
               <ThemeSwitch />
             </div>
-            <div></div>
+            
+            {/* Social media links for mobile - removing this since we'll show the full social section on mobile */}
           </div>
-          <div className="mt-16 grid grid-cols-1 gap-14 sm:gap-8 md:grid-cols-2 xl:col-span-2 xl:mt-0">
-            <div className="grid grid-cols-2 gap-8">
-              <div>
-                <h3 className="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-50">
-                  Product
-                </h3>
-                <ul
-                  role="list"
-                  className="mt-6 space-y-4"
-                  aria-label="Quick links Product"
-                >
-                  {navigation.product.map((item) => (
-                    <li key={item.name} className="w-fit">
-                      <Link
-                        className="flex rounded-md text-sm text-gray-500 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                        href={item.href}
-                        target={item.external ? "_blank" : undefined}
-                        rel={item.external ? "noopener noreferrer" : undefined}
-                      >
-                        <span>{item.name}</span>
+          
+          {/* Navigation sections */}
+          <div className="mt-12 grid grid-cols-2 gap-8 sm:mt-16 md:grid-cols-4 xl:col-span-2 xl:mt-0">
+            <div>
+              <h3 className="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-50">
+                Product
+              </h3>
+              <ul role="list" className="mt-6 space-y-4" aria-label="Product links">
+                {navigation.product.map((item) => (
+                  <li key={item.name}>
+                    <Link
+                      className="text-sm leading-6 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50 transition"
+                      href={item.href}
+                      target={item.external ? "_blank" : undefined}
+                      rel={item.external ? "noopener noreferrer" : undefined}
+                    >
+                      <span className="flex items-center">
+                        {item.name}
                         {item.external && (
-                          <div className="ml-1 aspect-square size-3 rounded-full bg-gray-100 p-px dark:bg-gray-500/20">
-                            <RiArrowRightUpLine
-                              aria-hidden="true"
-                              className="size-full shrink-0 text-gray-900 dark:text-gray-300"
-                            />
-                          </div>
+                          <RiArrowRightUpLine className="ml-1 size-3.5 text-gray-500 dark:text-gray-500" />
                         )}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h3 className="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-50">
-                  Social
-                </h3>
-                <ul
-                  role="list"
-                  className="mt-6 space-y-4"
-                  aria-label="Quick links Resources"
-                >
-                  {navigation.social.map((item) => (
-                    <li key={item.name} className="w-fit">
-                      <Link
-                        className="flex rounded-md text-sm text-gray-500 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                        href={item.href}
-                        target={item.external ? "_blank" : undefined}
-                        rel={item.external ? "noopener noreferrer" : undefined}
-                      >
-                        <span>{item.name}</span>
-                        {item.external && (
-                          <div className="ml-0.5 aspect-square size-3 rounded-full bg-gray-100 p-px dark:bg-gray-500/20">
-                            <RiArrowRightUpLine
-                              aria-hidden="true"
-                              className="size-full shrink-0 text-gray-900 dark:text-gray-300"
-                            />
-                          </div>
-                        )}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <div className="grid grid-cols-2 gap-8">
-              <div>
-                <h3 className="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-50">
-                  Company
-                </h3>
-                <ul
-                  role="list"
-                  className="mt-6 space-y-4"
-                  aria-label="Quick links Company"
-                >
-                  {navigation.company.map((item) => (
-                    <li key={item.name} className="w-fit">
-                      <Link
-                        className="flex rounded-md text-sm text-gray-500 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                        href={item.href}
-                        target={item.external ? "_blank" : undefined}
-                        rel={item.external ? "noopener noreferrer" : undefined}
-                      >
-                        <span>{item.name}</span>
+
+            <div>
+              <h3 className="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-50">
+                Company
+              </h3>
+              <ul role="list" className="mt-6 space-y-4" aria-label="Company links">
+                {navigation.company.map((item) => (
+                  <li key={item.name}>
+                    <Link
+                      className="text-sm leading-6 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50 transition"
+                      href={item.href}
+                      target={item.external ? "_blank" : undefined}
+                      rel={item.external ? "noopener noreferrer" : undefined}
+                    >
+                      <span className="flex items-center">
+                        {item.name}
                         {item.external && (
-                          <div className="ml-1 aspect-square size-3 rounded-full bg-gray-100 p-px dark:bg-gray-500/20">
-                            <RiArrowRightUpLine
-                              aria-hidden="true"
-                              className="size-full shrink-0 text-gray-900 dark:text-gray-300"
-                            />
-                          </div>
+                          <RiArrowRightUpLine className="ml-1 size-3.5 text-gray-500 dark:text-gray-500" />
                         )}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h3 className="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-50">
-                  Legal
-                </h3>
-                <ul
-                  role="list"
-                  className="mt-6 space-y-4"
-                  aria-label="Quick links Legal"
-                >
-                  {navigation.legal.map((item) => (
-                    <li key={item.name} className="w-fit">
-                      <Link
-                        className="flex rounded-md text-sm text-gray-500 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                        href={item.href}
-                        target={item.external ? "_blank" : undefined}
-                        rel={item.external ? "noopener noreferrer" : undefined}
-                      >
-                        <span>{item.name}</span>
-                        {item.external && (
-                          <div className="ml-1 aspect-square size-3 rounded-full bg-gray-100 p-px dark:bg-gray-500/20">
-                            <RiArrowRightUpLine
-                              aria-hidden="true"
-                              className="size-full shrink-0 text-gray-900 dark:text-gray-300"
-                            />
-                          </div>
-                        )}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-50">
+                Legal
+              </h3>
+              <ul role="list" className="mt-6 space-y-4" aria-label="Legal links">
+                {navigation.legal.map((item) => (
+                  <li key={item.name}>
+                    <Link
+                      className="text-sm leading-6 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50 transition"
+                      href={item.href}
+                      target={item.external ? "_blank" : undefined}
+                      rel={item.external ? "noopener noreferrer" : undefined}
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-50">
+                Social
+              </h3>
+              <ul role="list" className="mt-6 space-y-4" aria-label="Social links">
+                {navigation.social.map((item) => (
+                  <li key={item.name}>
+                    <Link
+                      className="text-sm leading-6 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50 transition flex items-center gap-2"
+                      href={item.href}
+                      target={item.external ? "_blank" : undefined}
+                      rel={item.external ? "noopener noreferrer" : undefined}
+                    >
+                      {item.icon}
+                      <span>{item.name}</span>
+                      {item.external && (
+                        <RiArrowRightUpLine className="size-3.5 text-gray-500 dark:text-gray-500" />
+                      )}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
+        
         <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-gray-200 pt-8 sm:mt-20 sm:flex-row lg:mt-24 dark:border-gray-800">
           <p className="text-sm leading-5 text-gray-500 dark:text-gray-400">
             &copy; {new Date().getFullYear()} RDP Datacenter, Inc. All rights
