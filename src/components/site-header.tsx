@@ -5,6 +5,7 @@ import { RiArrowRightUpLine } from "@remixicon/react"
 import { CommandMenu } from "@/components/command-menu";
 import { Icons } from "@/components/icons";
 import { GithubIcon } from "./ui/github";
+import { UserIcon } from "./ui/user";
 import { MainNav } from "@/components/main-nav";
 import { MobileNav } from "@/components/mobile-nav";
 import { ModeToggle } from "@/components/mode-toggle";
@@ -15,6 +16,10 @@ import { useSession, signOut } from "next-auth/react";
 
 export function SiteHeader() {
   const { data: session } = useSession();
+  
+  // Determine if user has a valid profile image
+  const hasValidProfileImage = session?.user?.image && session.user.image !== "";
+  
   return (
     <header
       className={cn(
@@ -42,7 +47,6 @@ export function SiteHeader() {
                   "w-9 px-0",
                 )}
               >
-                {/* <Icons.gitHub className="size-4" /> */}
                 <GithubIcon />
                 <span className="sr-only">GitHub</span>
               </div>
@@ -68,6 +72,7 @@ export function SiteHeader() {
             {/* User Avatar Dropdown */}
             <Dropdown placement="bottom-end" shouldBlockScroll={false} className="bg-background/60 backdrop-blur">
               <DropdownTrigger>
+              {hasValidProfileImage ? (
                 <Avatar
                   isBordered={false}
                   as="button"
@@ -75,8 +80,20 @@ export function SiteHeader() {
                   color="secondary"
                   name={typeof session?.user?.name === 'string' ? session.user.name : "User"}
                   size="sm"
-                  src={typeof session?.user?.image === 'string' ? session.user.image : "/images/avatar.png"}
+                  src={session.user.image ?? undefined}
                 />
+                ) : (
+                  <div className={cn(
+                    buttonVariants({
+                      variant: "ghost",
+                      size: "icon",
+                    }),
+                    "w-9 px-0 rounded-full flex items-center justify-center",
+                    session ? "bg-primary/10 text-primary" : "bg-secondary/20"
+                  )}>
+                    <UserIcon className="w-9 px-0" />
+                  </div>
+                )}
               </DropdownTrigger>
               <DropdownMenu aria-label="Profile Actions" variant="flat">
                 <DropdownItem key="profile" className="h-14 gap-2">

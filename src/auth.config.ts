@@ -42,12 +42,18 @@ export const OPTIONS: NextAuthOptions = {
       clientId: process.env.AUTH_GITHUB_ID as string,
       clientSecret: process.env.AUTH_GITHUB_SECRET as string,
       allowDangerousEmailAccountLinking: true,
+      httpOptions: {
+        timeout: 30000,
+      }
     }),
     CognitoProvider({
       clientId: process.env.AUTH_COGNITO_ID as string,
       clientSecret: process.env.AUTH_COGNITO_SECRET as string,
       issuer: process.env.AUTH_COGNITO_ISSUER as string,
       allowDangerousEmailAccountLinking: true,
+      httpOptions: {
+        timeout: 30000,
+      }
     }),
     EmailProvider({
       server: {
