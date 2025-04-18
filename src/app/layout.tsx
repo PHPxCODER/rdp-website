@@ -26,6 +26,11 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "RDP Datacenter",
   description: "RDP Datacenter",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export default function RootLayout({
