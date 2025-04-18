@@ -96,20 +96,20 @@ export function SiteHeader() {
                 )}
               </DropdownTrigger>
               <DropdownMenu aria-label="Profile Actions" variant="flat">
-                <DropdownItem key="profile" className="h-14 gap-2">
                   {session ? (
-                    <>
+                    <DropdownItem key="profile" className="h-14 gap-2">
                       <p className="font-semibold">
                         Signed in as {typeof session?.user?.name === "string" ? session.user.name : "User"}
                       </p>
                       <p className="text-sm text-default-500">
                         {typeof session?.user?.email === "string" ? session.user.email : ""}
                       </p>
-                    </>
+                    </DropdownItem>
                   ) : (
+                  <DropdownItem key="profile">
                     <p className="font-semibold">Not Signed in</p>
+                  </DropdownItem>
                   )}
-                </DropdownItem>
 
                 {/* Home */}
                 <DropdownItem key="home" href="/">Home</DropdownItem>
