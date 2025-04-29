@@ -1,5 +1,5 @@
 import React from "react";
-import Image from "next/image";
+import BlurImage from "@/components/blur-image";
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
 import { OPTIONS } from "@/auth.config";
@@ -35,13 +35,14 @@ const DashPage = async () => {
         </h1>
 
         <div className="mt-4 flex items-center gap-4">
-          <Image
+        <div className="overflow-hidden rounded-full">
+          <BlurImage
             src={session.user?.image ?? "/images/avatar.png"}
             alt={session.user?.name ?? "User Avatar"}
             width={80}
             height={80}
             className="rounded-full border"
-          />
+          /></div>
           <div>
             <p className="text-white-600"><strong>Role:</strong> {session.user?.role || "N/A"}</p>
             <p className="text-white-600"><strong>Email:</strong> {session.user?.email || "N/A"}</p>
