@@ -9,6 +9,48 @@ import NextTopLoader from "nextjs-toploader";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
+ export const metadata: Metadata = {
+  title: {
+    default: "RDP Datacenter",
+    template: "%s | RDP Datacenter",
+  },
+  description:
+    "High-performance cloud solutions from RDP Datacenter – Fast, secure, and reliable.",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
+  openGraph: {
+    title: "RDP Datacenter",
+    description:
+      "High-performance cloud solutions from RDP Datacenter – Fast, secure, and reliable.",
+    url: "https://rdpdatacenter.in",
+    siteName: "RDP Datacenter",
+    images: [
+      {
+        url: "https://res.cloudinary.com/ddvheihbd/image/upload/v1742735441/assets/rdp-dc.jpg",
+        width: 1200,
+        height: 630,
+        alt: "RDP Datacenter",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "RDP Datacenter",
+    description:
+      "High-performance cloud solutions from RDP Datacenter – Fast, secure, and reliable.",
+    images: [
+      "https://res.cloudinary.com/ddvheihbd/image/upload/v1742735441/assets/rdp-dc.jpg",
+    ],
+  },
+  alternates: {
+    canonical: "https://rdpdatacenter.in",
+  },
+};
+
 // Import Bahamas as a local font
 const bahamas = localFont({
   src: "./(landing)/fonts/Bahamas.woff",
@@ -22,16 +64,6 @@ const inter = Inter({
   variable: "--font-inter",
   display: "swap",
 });
-
-export const metadata: Metadata = {
-  title: "RDP Datacenter",
-  description: "RDP Datacenter",
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
-  },
-};
 
 export default function RootLayout({
   children,
