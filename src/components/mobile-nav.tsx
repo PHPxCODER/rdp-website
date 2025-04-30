@@ -3,8 +3,7 @@
 import Link, { LinkProps } from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import * as React from "react";
-
-import { Icons } from "@/components/icons";
+import RDPLogo from "@/components/RDPLogo";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -66,7 +65,7 @@ export function MobileNav() {
           }}
           className="flex items-center"
         >
-          <Icons.logo className="mr-2 size-4" />
+          <RDPLogo className="mr-2 mb-1 size-4" />
           <span className="font-bold">{siteConfig.name}</span>
         </Link>
         <ScrollArea className="my-4 h-[calc(100vh-6rem)]">

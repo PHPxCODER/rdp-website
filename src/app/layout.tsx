@@ -17,8 +17,8 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
   description:
     "High-performance cloud solutions from RDP Datacenter – Fast, secure, and reliable.",
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
     apple: "/apple-touch-icon.png",
   },
   openGraph: {

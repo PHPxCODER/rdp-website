@@ -1,6 +1,6 @@
 "use client";
 
-import { Icons } from "@/components/icons";
+import RDPLogo from "@/components/RDPLogo";
 import { Badge } from "@/components/ui/badge";
 import {
   ContextMenu,
@@ -20,8 +20,8 @@ export function MainNav() {
     <div className="mr-4 hidden md:flex">
       <ContextMenu>
         <ContextMenuTrigger asChild>
-          <Link href="/" className="relative mr-6 flex items-center space-x-2">
-            <Icons.logo className="size-6" />
+          <Link href="/" className="relative mr-6 flex items-center space-x-1">
+            <RDPLogo className="size-6 mb-1" />
             <span className="hidden font-bold md:inline-block">
               {siteConfig.name}
             </span>
