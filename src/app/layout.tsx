@@ -8,6 +8,7 @@ import { HeroUIProvider } from "@heroui/react";
 import NextTopLoader from "nextjs-toploader";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { PostHogProvider } from "@/components/PostHogProvider";
 
  export const metadata: Metadata = {
   title: {
@@ -73,16 +74,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${bahamas.variable} ${inter.variable} antialiased`}>
-        <SessionWrapper>
-        <HeroUIProvider>
-          <ThemeProvider attribute="class" defaultTheme="dark" disableTransitionOnChange>
-              <NextTopLoader color="#007BFF" />
-            {children}
-            <Analytics />
-            <SpeedInsights />
-          </ThemeProvider>
-        </HeroUIProvider>
-        </SessionWrapper>
+        <PostHogProvider>
+          <SessionWrapper>
+            <HeroUIProvider>
+              <ThemeProvider attribute="class" defaultTheme="dark" disableTransitionOnChange>
+                <NextTopLoader color="#007BFF" />
+                {children}
+                <Analytics />
+                <SpeedInsights />
+              </ThemeProvider>
+            </HeroUIProvider>
+          </SessionWrapper>
+        </PostHogProvider>
       </body>
     </html>
   );
