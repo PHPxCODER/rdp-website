@@ -4,11 +4,20 @@ import { Icon } from "@iconify/react/dist/offline";
 import arrowRightIcon from "@iconify/icons-solar/arrow-right-linear";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
+import {usePostHog} from "posthog-js/react";
 import emitter from "@/lib/emitter";
 
 export const ProBanner = () => {
+  const posthog = usePostHog();
   const pathname = usePathname();
   const [isVisible, setIsVisible] = useState(false);
+
+  const handleClick = () => {
+    posthog.capture("RDP Pro Banner", {
+      action: "click",
+      category: "landing-page",
+    });
+  };
 
   useEffect(() => {
     const showBannerOn404 = () => setIsVisible(true);
@@ -75,7 +84,7 @@ export const ProBanner = () => {
           className="text-small flex items-end sm:text-[0.93rem] text-foreground hover:opacity-80 transition-opacity"
           href="/dash"
           rel="noopener noreferrer"
-          
+          onClick={handleClick}
         >
           <span aria-label="rocket" className="hidden md:block" role="img">
             🚀
