@@ -29,9 +29,9 @@ export const seoConfig = {
         priority: 0.9,
       },
   
-      dash: {
-        url: "/dash",
-        title: "Dashboard - Manage Your Cloud Hosting",
+      profile: {
+        url: "/profile",
+        title: "Profile - Manage Your Cloud Hosting",
         description:
           "Access your RDP Datacenter dashboard to manage your cloud hosting, VPS, and dedicated servers effortlessly.",
         keywords: "hosting dashboard, cloud control panel, VPS management, server management",

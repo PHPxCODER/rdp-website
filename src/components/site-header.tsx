@@ -117,8 +117,8 @@ export function SiteHeader() {
                 {/* Show these only when user is logged in */}
                 {session && (
                   <>
-                    <DropdownItem key="profile" href="/dash">My Profile</DropdownItem>
-                    <DropdownItem key="update" href="/update-profile">Update Profile</DropdownItem>
+                    <DropdownItem key="profile" href="/profile">My Profile</DropdownItem>
+                    <DropdownItem key="update" href="/profile/update">Update Profile</DropdownItem>
                   </>
                 )}
 
