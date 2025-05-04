@@ -15,6 +15,12 @@ const nextConfig = {
         hostname: 'avatars.githubusercontent.com',
         port: '',
         pathname: '/u/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'rdpdc.s3.ap-south-1.amazonaws.com',
+        port: '',
+        pathname: '/profiles/**',
       }
     ],
   },

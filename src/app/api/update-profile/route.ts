@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
       try {
         console.log("Preparing to upload file:", imageFile.name, imageFile.type);
         
-        // Generate S3 presigned URL
+        // Generate S3 presigned URL - without ACL
         const { url, fields, fullUrl } = await generateUploadUrl(
           imageFile.type
         );
@@ -91,8 +91,9 @@ export async function POST(req: NextRequest) {
         
         if (!uploadResponse.ok) {
           console.error("Upload failed with status:", uploadResponse.status);
-          console.error("Response text:", await uploadResponse.text());
-          throw new Error(`Failed to upload image to S3: ${uploadResponse.status}`);
+          const responseText = await uploadResponse.text();
+          console.error("Response text:", responseText);
+          throw new Error(`Failed to upload image to S3: ${uploadResponse.status} - ${responseText}`);
         }
 
         console.log("Upload successful!");
@@ -102,7 +103,7 @@ export async function POST(req: NextRequest) {
       } catch (error) {
         console.error("S3 upload error:", error);
         return NextResponse.json(
-          { message: "Failed to upload image" },
+          { message: "Failed to upload image: " + (error instanceof Error ? error.message : String(error)) },
           { status: 500 }
         );
       }
@@ -134,7 +135,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Profile update error:", error);
     return NextResponse.json(
-      { message: "Failed to update profile" },
+      { message: "Failed to update profile: " + (error instanceof Error ? error.message : String(error)) },
       { status: 500 }
     );
   }

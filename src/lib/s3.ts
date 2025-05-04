@@ -26,6 +26,7 @@ export async function generateUploadUrl(contentType: string) {
     const key = `profiles/${fileName}`;
 
     // Create a presigned POST request with appropriate fields
+    // IMPORTANT: Do NOT include ACL field when bucket has ACLs disabled
     const { url, fields } = await createPresignedPost(s3, {
       Bucket: BUCKET_NAME,
       Key: key,
@@ -35,8 +36,7 @@ export async function generateUploadUrl(contentType: string) {
       ],
       Fields: {
         'Content-Type': contentType,
-        // Set proper ACL if needed
-        'acl': 'public-read',
+        // Removed 'acl': 'public-read' field which causes the error
       },
       Expires: 300, // URL expires in 5 minutes
     });
