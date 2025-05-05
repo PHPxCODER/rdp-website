@@ -67,14 +67,6 @@ const UpdateProfileForm = ({ initialData, userId }: UpdateProfileFormProps) => {
   const { toast } = useToast();
   const router = useRouter();
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: initialData.name,
-      phone: initialData.phone,
-    },
-  });
-
   // Clean up object URLs on unmount
   useEffect(() => {
     return () => {
@@ -83,6 +75,14 @@ const UpdateProfileForm = ({ initialData, userId }: UpdateProfileFormProps) => {
       }
     };
   }, [previewUrl]);
+
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: initialData.name,
+      phone: initialData.phone,
+    },
+  });
 
   // Handle image selection
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
