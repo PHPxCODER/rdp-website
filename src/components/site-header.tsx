@@ -12,13 +12,20 @@ import { ModeToggle } from "@/components/mode-toggle";
 import { buttonVariants } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
+import { transformS3Url } from "@/lib/image-utils";
 import { useSession, signOut } from "next-auth/react";
+import { useMemo } from "react";
 
 export function SiteHeader() {
   const { data: session } = useSession();
   
   // Determine if user has a valid profile image
   const hasValidProfileImage = session?.user?.image && session.user.image !== "";
+  
+  // Transform S3 image URL if needed
+  const profileImageUrl = useMemo(() => {
+    return session?.user?.image ? transformS3Url(session.user.image) : "";
+  }, [session?.user?.image]);
   
   return (
     <header
@@ -80,7 +87,7 @@ export function SiteHeader() {
                   color="secondary"
                   name={typeof session?.user?.name === 'string' ? session.user.name : "User"}
                   size="sm"
-                  src={session.user.image ?? undefined}
+                  src={profileImageUrl}
                 />
                 ) : (
                   <div className={cn(

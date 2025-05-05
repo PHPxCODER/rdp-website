@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
+import { transformS3Url } from "@/lib/image-utils";
 
 // Define form schema using Zod
 const formSchema = z.object({
@@ -53,8 +54,14 @@ interface UpdateProfileFormProps {
 
 const UpdateProfileForm = ({ initialData, userId }: UpdateProfileFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Transform initial image URL if it's from S3
+  const transformedInitialImage = useMemo(() => {
+    return transformS3Url(initialData.image);
+  }, [initialData.image]);
+  
   const [previewUrl, setPreviewUrl] = useState<string | null>(
-    initialData.image || null
+    transformedInitialImage || null
   );
   const [imageFile, setImageFile] = useState<File | null>(null);
   const { toast } = useToast();
