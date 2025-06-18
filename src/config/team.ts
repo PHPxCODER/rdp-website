@@ -29,6 +29,15 @@ export const team = [
       discordid: "446946428158214164",
     },
     {
+      name: "Edan Solomon Tuti",
+      role: "Co-Founder",
+      image: "https://res.cloudinary.com/ddvheihbd/image/upload/v1750241235/edan-2t_zgoton.jpg",
+      linkedin: "https://www.linkedin.com/in/edan-tuti/",
+      github: "https://github.com/Edantuti",
+      website: "https://edantuti.vercel.app",
+      discordid: "492611804313419786",
+    },
+    {
       name: "Rahul Kose",
       role: "Co-Founder & Content Manager",
       image: "https://res.cloudinary.com/ddvheihbd/image/upload/ar_1:1,c_crop,g_north_east/team/rgxjapan",
