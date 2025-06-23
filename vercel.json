@@ -1,0 +1,8 @@
+{
+    "rewrites": [
+      {
+        "source": "/docs/:match*",
+        "destination": "https://docs.rdpdc.in/:match*"
+      }
+    ]
+  }
