@@ -5,7 +5,8 @@ import { Inter } from "next/font/google";
 import SessionWrapper from "@/components/SessionWrapper";
 import { ThemeProvider } from "@/components/theme-provider";
 import { HeroUIProvider } from "@heroui/react";
-import NextTopLoader from "nextjs-toploader";
+// import NextTopLoader from "nextjs-toploader";
+import TopLoader from "@/components/TopLoaderWrapper";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { PostHogProvider } from "@/components/PostHogProvider";
@@ -78,8 +79,10 @@ export default function RootLayout({
           <SessionWrapper>
             <HeroUIProvider>
               <ThemeProvider attribute="class" defaultTheme="dark" disableTransitionOnChange>
-                <NextTopLoader color="#007BFF" />
+                {/* <NextTopLoader color="#007BFF" /> */}
+                <TopLoader>
                 {children}
+                </TopLoader>
                 <Analytics />
                 <SpeedInsights />
               </ThemeProvider>
