@@ -19,6 +19,16 @@ export const seoConfig = {
           "RDP hosting, cloud hosting, VPS, dedicated servers, managed hosting, web hosting",
         priority: 1.0,
       },
+
+      pricing: {
+        url: "/pricing",
+        title: "Pricing - Affordable Cloud Hosting Plans | RDP Datacenter",
+        description:
+          "Explore our transparent and affordable pricing for cloud hosting, VPS, and dedicated servers. Find the perfect plan for your business at RDP Datacenter.",
+        keywords:
+          "cloud hosting pricing, VPS pricing, dedicated server pricing, RDP Datacenter plans, affordable hosting",
+        priority: 0.9,
+      },
   
       auth: {
         url: "/auth",
