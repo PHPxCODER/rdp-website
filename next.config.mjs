@@ -18,7 +18,7 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'rdpdc.s3.ap-south-1.amazonaws.com',
+        hostname: 'cdn.rdpdatacenter.in',
         port: '',
         pathname: '/profiles/**',
       }
