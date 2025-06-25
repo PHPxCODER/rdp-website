@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid'; // For generating request IDs
 
 // Initialize S3 client
 const s3 = new S3Client({
-  region: process.env.AWS_REGION || "ap-south-1",
+  region: process.env.AWS_REGION || "ap-south-2",
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "",

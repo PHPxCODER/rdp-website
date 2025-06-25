@@ -1,36 +1,63 @@
+// src/lib/image-utils.ts
+
 /**
- * Transforms S3 URLs to use our proxy API
+ * Transforms image URLs to use CloudFront distribution
  * @param src The source URL to transform
- * @param isPublic Optional flag to indicate if this is a public image that doesn't need auth
- * @returns Transformed URL that uses our proxy API if it's an S3 URL
+ * @returns CloudFront URL or original URL if not transformable
  */
-export function transformS3Url(src: string | null | undefined, isPublic: boolean = false): string {
+export function transformS3Url(src: string | null | undefined): string {
   if (!src) return '';
   
-  // Check if this is an S3 URL for our bucket
-  if (src.includes('rdpdc.s3.ap-south-1.amazonaws.com/profiles/')) {
-    // Extract just the filename part (after the last slash)
-    const filenameMatch = src.match(/rdpdc\.s3\.ap-south-1\.amazonaws\.com\/profiles\/([^?]+)/);
-    if (filenameMatch && filenameMatch[1]) {
-      // For public images (like team photos) use public endpoint
-      if (isPublic) {
-        return `/api/public-image/${encodeURIComponent(filenameMatch[1])}`;
-      }
-      // For private user images, use the secure endpoint
-      return `/api/s3-image/${encodeURIComponent(filenameMatch[1])}`;
+  // If it's already a CloudFront URL, return as is
+  if (src.includes('cdn.rdpdatacenter.in')) {
+    return src;
+  }
+  
+  // Check if this is an old S3 URL format that needs to be converted
+  if (src.includes('rdpdc.s3.') && src.includes('/profiles/')) {
+    // Extract the filename part (after profiles/)
+    const profilesMatch = src.match(/\/profiles\/([^?]+)/);
+    if (profilesMatch && profilesMatch[1]) {
+      return `https://cdn.rdpdatacenter.in/profiles/${profilesMatch[1]}`;
     }
   }
   
-  // Return original URL if not an S3 URL or pattern doesn't match
+  // Check if this is a direct S3 bucket URL
+  if (src.includes('s3.amazonaws.com/rdpdc/profiles/')) {
+    const filenameMatch = src.match(/s3\.amazonaws\.com\/rdpdc\/profiles\/([^?]+)/);
+    if (filenameMatch && filenameMatch[1]) {
+      return `https://cdn.rdpdatacenter.in/profiles/${filenameMatch[1]}`;
+    }
+  }
+  
+  // Return original URL if it doesn't match any S3 patterns
   return src;
 }
 
 /**
- * Generate a safe image URL that works for both authenticated and unauthenticated users
- * @param userId The user ID who owns the image
- * @param filename The image filename
- * @returns URL with embedded user ID for authorization
+ * Get the CloudFront URL for a profile image
+ * @param filename The image filename (e.g., "uuid.jpg")
+ * @returns Full CloudFront URL
  */
-export function generateSecureImageUrl(userId: string, filename: string): string {
-  return `/api/user-image/${userId}/${encodeURIComponent(filename)}`;
+export function getProfileImageUrl(filename: string): string {
+  if (!filename) return '';
+  
+  // Remove any existing path prefixes if they exist
+  const cleanFilename = filename.replace(/^.*\//, '');
+  
+  return `https://cdn.rdpdatacenter.in/profiles/${cleanFilename}`;
+}
+
+/**
+ * Extract filename from any image URL format
+ * @param url The image URL
+ * @returns Just the filename with extension
+ */
+export function extractFilename(url: string): string {
+  if (!url) return '';
+  
+  // Remove query parameters and extract filename
+  const urlWithoutQuery = url.split('?')[0];
+  const parts = urlWithoutQuery.split('/');
+  return parts[parts.length - 1];
 }

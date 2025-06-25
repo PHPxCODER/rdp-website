@@ -58,13 +58,13 @@ export async function POST(req: NextRequest) {
       try {
         console.log("Preparing to upload file:", imageFile.name, imageFile.type);
         
-        // Generate S3 presigned URL - without ACL
+        // Generate S3 presigned URL for public upload
         const { url, fields, fullUrl } = await generateUploadUrl(
           imageFile.type
         );
         
         console.log("Generated presigned URL:", url);
-        console.log("Fields:", JSON.stringify(fields));
+        console.log("CloudFront URL will be:", fullUrl);
 
         // Create form data for S3 upload
         const s3FormData = new FormData();
@@ -84,7 +84,6 @@ export async function POST(req: NextRequest) {
         const uploadResponse = await fetch(url, {
           method: "POST",
           body: s3FormData,
-          // Do not set Content-Type header, the browser will set it correctly with multipart/form-data
         });
         
         console.log("S3 upload response status:", uploadResponse.status);
@@ -96,9 +95,9 @@ export async function POST(req: NextRequest) {
           throw new Error(`Failed to upload image to S3: ${uploadResponse.status} - ${responseText}`);
         }
 
-        console.log("Upload successful!");
+        console.log("Upload successful! CloudFront URL:", fullUrl);
         
-        // Set the new image URL
+        // Set the CloudFront URL as the final image URL
         finalImageUrl = fullUrl;
       } catch (error) {
         console.error("S3 upload error:", error);
@@ -118,7 +117,7 @@ export async function POST(req: NextRequest) {
       data: {
         name,
         phoneNumber: phone,
-        image: finalImageUrl,
+        image: finalImageUrl, // This will now be a CloudFront URL
         updatedAt: new Date(),
       },
     });
