@@ -13,18 +13,22 @@ import { PostHogProvider } from "@/components/PostHogProvider";
 
  export const metadata: Metadata = {
   title: {
-    default: "RDP Datacenter",
+    default: "RDP Datacenter - High-Performance Cloud Solutions",
     template: "%s | RDP Datacenter",
   },
   description:
     "High-performance cloud solutions from RDP Datacenter – Fast, secure, and reliable.",
+  keywords: "RDP Datacenter, cloud solutions, high-performance hosting, datacenter services",
+  authors: [{ name: "RDP Datacenter" }],
+  creator: "RDP Datacenter",
+  publisher: "RDP Datacenter",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
     apple: "/apple-touch-icon.png",
   },
   openGraph: {
-    title: "RDP Datacenter",
+    title: "RDP Datacenter - High-Performance Cloud Solutions",
     description:
       "High-performance cloud solutions from RDP Datacenter – Fast, secure, and reliable.",
     url: "https://rdpdatacenter.in",
@@ -34,14 +38,14 @@ import { PostHogProvider } from "@/components/PostHogProvider";
         url: "https://res.cloudinary.com/ddvheihbd/image/upload/v1742735441/assets/rdp-dc.jpg",
         width: 1200,
         height: 630,
-        alt: "RDP Datacenter",
+        alt: "RDP Datacenter Logo",
       },
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "RDP Datacenter",
+    title: "RDP Datacenter - High-Performance Cloud Solutions",
     description:
       "High-performance cloud solutions from RDP Datacenter – Fast, secure, and reliable.",
     images: [
@@ -50,6 +54,17 @@ import { PostHogProvider } from "@/components/PostHogProvider";
   },
   alternates: {
     canonical: "https://rdpdatacenter.in",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 
