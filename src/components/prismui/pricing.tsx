@@ -34,7 +34,7 @@ interface PricingProps {
 export function Pricing({
   plans,
   title = "Simple, Transparent Pricing",
-  description = "Choose the plan that works for you\nAll plans include access to our platform, lead generation tools, and dedicated support.",
+  description = "Choose the plan that works for you. All plans include access to our platform, lead generation tools, and dedicated support.",
 }: PricingProps) {
   const [isMonthly, setIsMonthly] = useState(true);
   const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -70,12 +70,12 @@ export function Pricing({
   };
 
   return (
-    <section className="w-full max-w-7xl mx-auto px-4 py-20">
+    <section className="w-full max-w-7xl mx-auto px-4 py-20 bg-background">
       <div className="text-center space-y-4 mb-12">
         <h2 className="text-4xl font-bold tracking-tight sm:text-5xl">
           {title}
         </h2>
-        <p className="text-muted-foreground text-lg whitespace-pre-line">
+        <p className="text-muted-foreground text-lg">
           {description}
         </p>
       </div>
@@ -145,11 +145,9 @@ export function Pricing({
               </p>
               <div className="mt-6 flex items-center justify-center gap-x-2">
                 <span className="text-5xl font-bold tracking-tight text-foreground">
-                  <NumberFlow
+                  ₹<NumberFlow
                     value={isMonthly ? Number(plan.price) : Number(plan.yearlyPrice)}
                     format={{
-                      style: "currency",
-                      currency: "USD",
                       minimumFractionDigits: 0,
                       maximumFractionDigits: 0,
                     }}
