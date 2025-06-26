@@ -23,11 +23,7 @@ interface User {
   createdAt: Date;
   updatedAt: Date;
   image: string | null;
-  // SECURITY: Only include 2FA status, NOT secrets
   twoFactorEnabled: boolean;
-  // REMOVED for security:
-  // twoFactorSecret: string | null; // ❌ SECURITY RISK
-  // backupCodes: string[]; // ❌ SECURITY RISK
 }
 
 interface ProfileClientWrapperProps {
@@ -41,31 +37,27 @@ const ProfileClientWrapper: React.FC<ProfileClientWrapperProps> = ({ user }) => 
     // The actual toggle logic is handled inside TwoFactorSettings component
     // This is just for any additional side effects if needed
     console.log("2FA toggled:", enabled);
+    // Optionally: refetch user data here
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleSetupComplete = async (secret: string, backupCodes: string[]) => {
-    // Show success message when 2FA setup is completed
     toast({
       title: "2FA Setup Complete",
-      description: "Two-factor authentication has been successfully enabled for your account.",
+      description:
+        "Two-factor authentication has been successfully enabled for your account.",
       variant: "default",
     });
-    
-    // Optionally refresh the page to update the UI
-    window.location.reload();
+    // Optionally: refetch user data here instead of reloading
   };
 
   const handleDisable2FA = async () => {
-    // Show message when 2FA is disabled
     toast({
       title: "2FA Disabled",
       description: "Two-factor authentication has been disabled for your account.",
       variant: "default",
     });
-    
-    // Optionally refresh the page to update the UI
-    window.location.reload();
+    // Optionally: refetch user data here instead of reloading
   };
 
   return (
@@ -83,19 +75,24 @@ const ProfileClientWrapper: React.FC<ProfileClientWrapperProps> = ({ user }) => 
           </h1>
 
           <div className="mt-4 flex items-center gap-4">
-            <div className="overflow-hidden rounded-full">
+            <div className="relative w-20 h-20 overflow-hidden rounded-full">
               <BlurImage
                 src={user?.image ?? "/images/avatar.png"}
                 alt={user?.name ?? "User Avatar"}
-                width={80}
-                height={80}
-                className="rounded-full border"
+                fill
+                className="object-cover"
               />
             </div>
             <div className="space-y-1">
-              <p className="text-white-600"><strong>Role:</strong> {user?.role || "N/A"}</p>
-              <p className="text-white-600"><strong>Email:</strong> {user?.email || "N/A"}</p>
-              <p className="text-white-600"><strong>Phone:</strong> {user?.phone || "N/A"}</p>
+              <p className="text-white-600">
+                <strong>Role:</strong> {user?.role || "N/A"}
+              </p>
+              <p className="text-white-600">
+                <strong>Email:</strong> {user?.email || "N/A"}
+              </p>
+              <p className="text-white-600">
+                <strong>Phone:</strong> {user?.phone || "N/A"}
+              </p>
             </div>
           </div>
         </div>
@@ -113,7 +110,7 @@ const ProfileClientWrapper: React.FC<ProfileClientWrapperProps> = ({ user }) => 
               <User className="w-4 h-4" />
               <h3 className="text-lg font-medium">Profile Information</h3>
             </div>
-            
+
             <div className="flex items-center justify-between p-4 border border-border rounded-lg">
               <div>
                 <p className="font-medium">Personal Details</p>
@@ -122,9 +119,7 @@ const ProfileClientWrapper: React.FC<ProfileClientWrapperProps> = ({ user }) => 
                 </p>
               </div>
               <Link href="/profile/update">
-                <Button variant="outline">
-                  Edit Profile
-                </Button>
+                <Button variant="outline">Edit Profile</Button>
               </Link>
             </div>
           </div>
@@ -137,7 +132,7 @@ const ProfileClientWrapper: React.FC<ProfileClientWrapperProps> = ({ user }) => 
               <Shield className="w-4 h-4" />
               <h3 className="text-lg font-medium">Security Settings</h3>
             </div>
-            
+
             {/* Two-Factor Authentication */}
             <TwoFactorSettings
               isEnabled={user?.twoFactorEnabled || false}
@@ -152,7 +147,7 @@ const ProfileClientWrapper: React.FC<ProfileClientWrapperProps> = ({ user }) => 
           {/* Session Management */}
           <div className="space-y-4">
             <h3 className="text-lg font-medium">Session Management</h3>
-            
+
             <div className="flex items-center justify-between p-4 border border-border rounded-lg">
               <div>
                 <p className="font-medium">Sign Out</p>
@@ -168,17 +163,21 @@ const ProfileClientWrapper: React.FC<ProfileClientWrapperProps> = ({ user }) => 
         {/* Account Information */}
         <div className="shadow-md rounded-lg backdrop-blur-md p-6">
           <h2 className="text-xl font-semibold mb-4">Account Information</h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <div className="space-y-2">
               <div>
                 <span className="font-medium">Account ID:</span>
-                <p className="text-muted-foreground font-mono text-xs mt-1">{user?.id}</p>
+                <p className="text-muted-foreground font-mono text-xs mt-1">
+                  {user?.id}
+                </p>
               </div>
               <div>
                 <span className="font-medium">Member Since:</span>
                 <p className="text-muted-foreground">
-                  {user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US') : "N/A"}
+                  {user?.createdAt
+                    ? new Date(user.createdAt).toLocaleDateString("en-IN")
+                    : "N/A"}
                 </p>
               </div>
             </div>
