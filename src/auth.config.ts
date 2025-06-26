@@ -105,6 +105,11 @@ export const OPTIONS: NextAuthOptions = {
         token.createdAt = user.createdAt;
         token.updatedAt = user.updatedAt;
         token.image = user.image;
+        // Add 2FA fields
+        token.twoFactorEnabled = user.twoFactorEnabled;
+        // NEVER include these in JWT/session:
+        // token.twoFactorSecret = user.twoFactorSecret; // ❌ SECURITY RISK
+        // token.backupCodes = user.backupCodes; // ❌ SECURITY RISK
       }
       return token;
     },
@@ -113,6 +118,22 @@ export const OPTIONS: NextAuthOptions = {
       // Fetch the latest user data from the database using Prisma
       const user = await prisma.user.findUnique({
         where: { id: token.id },
+        select: {
+          id: true,
+          email: true,
+          emailVerified: true,
+          name: true,
+          phoneNumber: true,
+          role: true,
+          createdAt: true,
+          updatedAt: true,
+          image: true,
+          // Include 2FA fields
+          twoFactorEnabled: true
+          // NEVER select these for session:
+          // twoFactorSecret: true, // ❌ SECURITY RISK
+          // backupCodes: true, // ❌ SECURITY RISK
+        }
       });
 
       // If the user exists in the database, update the session object
@@ -126,6 +147,11 @@ export const OPTIONS: NextAuthOptions = {
         session.user.createdAt = user.createdAt; // Handle according to your needs
         session.user.updatedAt = user.updatedAt; // Handle according to your needs
         session.user.image = user.image ?? ''; // Default to empty string if null
+        // Add 2FA fields to session
+        session.user.twoFactorEnabled = user.twoFactorEnabled;
+        // NEVER include these in session:
+        // session.user.twoFactorSecret = user.twoFactorSecret; // ❌ SECURITY RISK
+        // session.user.backupCodes = user.backupCodes; // ❌ SECURITY RISK
       }
 
       return session;

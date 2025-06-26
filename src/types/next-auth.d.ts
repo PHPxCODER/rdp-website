@@ -12,6 +12,11 @@ declare module "next-auth" {
     createdAt: Date;
     updatedAt: Date;
     image: string | null;
+    // SECURITY: Only include 2FA status in session types
+    twoFactorEnabled: boolean;
+    // NEVER include these in session types:
+    // twoFactorSecret: string | null; // ❌ SECURITY RISK
+    // backupCodes: string[]; // ❌ SECURITY RISK
   }
 
   interface Session {
@@ -25,6 +30,11 @@ declare module "next-auth" {
       createdAt: Date;
       updatedAt: Date;
       image: string | null;
+      // SECURITY: Only expose 2FA status, NOT secrets
+      twoFactorEnabled: boolean;
+      // NEVER include these in session:
+      // twoFactorSecret: string | null; // ❌ SECURITY RISK  
+      // backupCodes: string[]; // ❌ SECURITY RISK
     };
   }
 }
@@ -40,5 +50,10 @@ declare module "next-auth/jwt" {
     createdAt: Date;
     updatedAt: Date;
     image: string | null;
+    // SECURITY: Only include 2FA status in JWT
+    twoFactorEnabled: boolean;
+    // NEVER include these in JWT:
+    // twoFactorSecret: string | null; // ❌ SECURITY RISK
+    // backupCodes: string[]; // ❌ SECURITY RISK
   }
 }

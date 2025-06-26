@@ -1,7 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { Inter } from "next/font/google";
 import SessionWrapper from "@/components/SessionWrapper";
 import { ThemeProvider } from "@/components/theme-provider";
 import { HeroUIProvider } from "@heroui/react";
@@ -76,13 +75,6 @@ const bahamas = localFont({
   weight: "100 900",
 });
 
-// Import a modern Google font (e.g., Inter)
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -128,7 +120,8 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={`${bahamas.variable} ${inter.variable} antialiased`}>
+      {/* <body className={`${bahamas.variable} ${inter.variable} antialiased`}> */}
+      <body className={`${bahamas.variable} antialiased`}>
         <PostHogProvider>
           <SessionWrapper>
             <HeroUIProvider>
