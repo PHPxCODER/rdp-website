@@ -53,9 +53,17 @@ model User {
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   image         String?
+  
+  // 2FA Fields
+  twoFactorEnabled Boolean @default(false)
+  twoFactorSecret  String?
+  backupCodes      String[] @default([])
+  
   Account       Account[]
   applications  JobApplication?
   Session       Session[]
+  
+  @@index([twoFactorEnabled])
 }
 
 model JobListing {
