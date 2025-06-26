@@ -9,8 +9,14 @@ interface TwoFactorStepProps {
   isSubmitting: boolean;
   codeInputRefs: React.MutableRefObject<(HTMLInputElement | null)[]>;
   onCodeChange: (index: number, value: string) => void;
-  onKeyDown: (index: number, e: React.KeyboardEvent<HTMLInputElement>) => void;
-  onTwoFactorPaste: (e: React.ClipboardEvent<HTMLInputElement>, onChange: (value: string) => void) => void;
+  onKeyDown: (
+    index: number,
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => void;
+  onTwoFactorPaste: (
+    e: React.ClipboardEvent<HTMLInputElement>,
+    onChange: (value: string) => void
+  ) => void;
   onBackClick: () => void;
   onTwoFactorSubmit: (code: string) => void;
   onUseBackupCode: () => void;
@@ -62,23 +68,28 @@ export const TwoFactorStep: React.FC<TwoFactorStepProps> = ({
                     value={digit}
                     onChange={(e) => onCodeChange(i, e.target.value)}
                     onKeyDown={(e) => onKeyDown(i, e)}
-                    onPaste={(e) => onTwoFactorPaste(e, (value) => {
-                      const digits = value.split('').slice(0, 6);
-                      digits.forEach((d, idx) => {
-                        if (idx < 6) onCodeChange(idx, d);
-                      });
-                      if (digits.length === 6) {
-                        onTwoFactorSubmit(digits.join(''));
-                      }
-                    })}
-                    className="w-8 text-center text-xl bg-transparent text-foreground border-none focus:outline-none focus:ring-0 appearance-none"
-                    style={{ caretColor: "transparent" }}
+                    onPaste={(e) =>
+                      onTwoFactorPaste(e, (value) => {
+                        const digits = value.split("").slice(0, 6);
+                        digits.forEach((d, idx) => {
+                          if (idx < 6) onCodeChange(idx, d);
+                        });
+                        if (digits.length === 6) {
+                          onTwoFactorSubmit(digits.join(""));
+                        }
+                      })
+                    }
+                    className="
+                      w-8 text-center text-xl bg-transparent text-foreground
+                      border-b-2 border-border
+                      focus:border-blue-500 focus:outline-none
+                      transition-colors
+                    "
+                    style={{ caretColor: "black" }}
                   />
                   {!digit && (
                     <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none">
-                      <span className="text-xl text-muted-foreground">
-                        0
-                      </span>
+                      <span className="text-xl text-muted-foreground">0</span>
                     </div>
                   )}
                 </div>
@@ -95,8 +106,16 @@ export const TwoFactorStep: React.FC<TwoFactorStepProps> = ({
       <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
         <div className="flex items-start gap-3">
           <div className="flex-shrink-0">
-            <svg className="w-5 h-5 text-blue-500 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+            <svg
+              className="w-5 h-5 text-blue-500 mt-0.5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                clipRule="evenodd"
+              />
             </svg>
           </div>
           <div className="text-left">
@@ -135,7 +154,7 @@ export const TwoFactorStep: React.FC<TwoFactorStepProps> = ({
         </motion.button>
         <motion.button
           onClick={() => {
-            const completeCode = code.join('');
+            const completeCode = code.join("");
             if (completeCode.length === 6) {
               onTwoFactorSubmit(completeCode);
             }

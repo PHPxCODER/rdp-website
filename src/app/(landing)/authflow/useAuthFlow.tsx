@@ -26,6 +26,14 @@ export const useAuthFlow = () => {
   const { toast } = useToast();
   const router = useRouter();
 
+  // ✅ NEW: Reset 2FA input and focus first input
+  const resetTwoFactorInput = () => {
+    setTwoFactorCode(["", "", "", "", "", ""]);
+    setTimeout(() => {
+      twoFactorInputRefs.current[0]?.focus();
+    }, 50); // Small delay to ensure state update completes
+  };
+
   // Check for OAuth errors in URL query params
   useEffect(() => {
     const error = new URLSearchParams(window.location.search).get("error");
@@ -240,6 +248,7 @@ export const useAuthFlow = () => {
     setIsSubmitting(false);
   };
 
+  // ✅ FIXED: Enhanced 2FA submit with auto-reset on error
   const handleTwoFactorSubmit = async (totpCode: string) => {
     setIsSubmitting(true);
 
@@ -258,7 +267,7 @@ export const useAuthFlow = () => {
       const data = await response.json();
 
       if (data.valid) {
-        // Trigger reverse animation
+        // ✅ SUCCESS: Trigger animations and redirect
         setReverseCanvasVisible(true);
         setTimeout(() => {
           setInitialCanvasVisible(false);
@@ -277,15 +286,21 @@ export const useAuthFlow = () => {
           }, 2000);
         }, 2000);
       } else {
+        // ✅ ERROR: Reset input and focus first field
+        resetTwoFactorInput();
+        
         toast({
           title: "Invalid Code",
           description: "The code you entered is invalid. Please try again.",
           variant: "destructive",
         });
-        setTwoFactorCode(["", "", "", "", "", ""]);
       }
     } catch (error) {
       console.error("Error verifying 2FA:", error);
+      
+      // ✅ NETWORK ERROR: Also reset input
+      resetTwoFactorInput();
+      
       toast({
         title: "Error",
         description: "An error occurred while verifying your code.",
@@ -296,6 +311,7 @@ export const useAuthFlow = () => {
     }
   };
 
+  // ✅ FIXED: Enhanced backup code submit with auto-reset on error
   const handleBackupCodeSubmit = async (backupCode: string) => {
     setIsSubmitting(true);
 
@@ -314,7 +330,7 @@ export const useAuthFlow = () => {
       const data = await response.json();
 
       if (data.valid) {
-        // Trigger reverse animation
+        // ✅ SUCCESS: Trigger animations and redirect
         setReverseCanvasVisible(true);
         setTimeout(() => {
           setInitialCanvasVisible(false);
@@ -333,6 +349,7 @@ export const useAuthFlow = () => {
           }, 2000);
         }, 2000);
       } else {
+        // ✅ ERROR: Show error (backup code input handles its own reset)
         toast({
           title: "Invalid Backup Code",
           description: "The backup code you entered is invalid or has already been used.",
@@ -381,6 +398,8 @@ export const useAuthFlow = () => {
 
   const handleBackToTwoFactor = () => {
     setStep("twoFactor");
+    // ✅ Reset 2FA input when returning from backup code
+    resetTwoFactorInput();
   };
 
   const handleOtpPaste = (
@@ -434,7 +453,7 @@ export const useAuthFlow = () => {
     } catch (error) {
       toast({
         title: "Error",
-        description: `Failed to resend OTP: ${error}`,
+        description: `Failed to resend OTP. Please try again. ${error}`,
         variant: "destructive",
       });
     } finally {
@@ -478,5 +497,8 @@ export const useAuthFlow = () => {
     handleOtpPaste,
     handleTwoFactorPaste,
     handleResendCode,
+    
+    // ✅ NEW: Reset function (can be used by components if needed)
+    resetTwoFactorInput,
   };
 };
