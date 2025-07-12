@@ -23,8 +23,8 @@ import { PostHogProvider } from "@/components/PostHogProvider";
   publisher: "RDP Datacenter",
   applicationName: "RDP Datacenter",
   icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
     apple: "/apple-touch-icon.png",
   },
   openGraph: {
