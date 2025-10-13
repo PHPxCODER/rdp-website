@@ -68,7 +68,7 @@ export const EmailStep: React.FC<EmailStepProps> = ({
           <div className="relative">
             <input
               type="email"
-              placeholder="info@gmail.com"
+              placeholder="meow@rdpdatacenter.in"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full backdrop-blur-[1px] text-foreground border border-border rounded-full py-3 px-4 focus:outline-none focus:border focus:border-foreground/30 text-center bg-transparent"
