@@ -45,6 +45,19 @@ export async function POST(request: NextRequest) {
 
     const { password } = validation.data;
 
+    // Check if user already has a credential account before attempting to create one
+    const existingCredential = await prisma.account.findFirst({
+      where: {
+        userId: session.user.id,
+        providerId: "credential",
+        password: {
+          not: null,
+        },
+      },
+    });
+
+    const alreadyExists = existingCredential !== null;
+
     // Use Better Auth's setPassword API to properly hash and store the password
     // This handles password creation atomically
     try {
@@ -55,29 +68,16 @@ export async function POST(request: NextRequest) {
         headers: await headers(),
       });
 
-      // Check if this was a new password or if one already existed
-      const credentialAccount = await prisma.account.findFirst({
-        where: {
-          userId: session.user.id,
-          providerId: "credential",
-          password: {
-            not: null,
-          },
-        },
-      });
-
       return NextResponse.json({
         success: true,
-        alreadyExists: credentialAccount !== null
+        alreadyExists
       });
     } catch (error: unknown) {
       // If setPassword fails because password already exists, treat as success
       const errorMessage = error instanceof Error ? error.message : "";
-      const errorStatus = typeof error === "object" && error !== null && "status" in error ? (error as { status: number }).status : undefined;
 
       if (errorMessage.includes("already has a password") ||
-          errorMessage.includes("credential") ||
-          errorStatus === 400) {
+          errorMessage.includes("credential")) {
         return NextResponse.json({
           success: true,
           alreadyExists: true

@@ -84,6 +84,33 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({
       return;
     }
 
+    if (!/[A-Z]/.test(password)) {
+      toast({
+        title: "Invalid Password",
+        description: "Password must contain at least one uppercase letter.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!/[a-z]/.test(password)) {
+      toast({
+        title: "Invalid Password",
+        description: "Password must contain at least one lowercase letter.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!/[0-9]/.test(password)) {
+      toast({
+        title: "Invalid Password",
+        description: "Password must contain at least one number.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (password !== confirmPassword) {
       toast({
         title: "Passwords Don't Match",
@@ -482,7 +509,14 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({
 
                 <Button
                   onClick={handleCreatePassword}
-                  disabled={isLoading || password.length < 8 || password !== confirmPassword}
+                  disabled={
+                    isLoading ||
+                    password.length < 8 ||
+                    !/[A-Z]/.test(password) ||
+                    !/[a-z]/.test(password) ||
+                    !/[0-9]/.test(password) ||
+                    password !== confirmPassword
+                  }
                   className="w-full"
                 >
                   {isLoading ? "Creating..." : "Create Password & Continue"}

@@ -196,6 +196,17 @@ export const useAuthFlow = () => {
 
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (attemptCount >= 3) {
+      toast({
+        title: "Too Many Attempts",
+        description: "You have exceeded the maximum number of attempts. Please try again later.",
+        variant: "destructive",
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
     if (!password.trim()) {
       toast({
         title: "Password Required",
@@ -279,12 +290,6 @@ export const useAuthFlow = () => {
 
     setIsSubmitting(true);
 
-    // Trigger reverse animation
-    setReverseCanvasVisible(true);
-    setTimeout(() => {
-      setInitialCanvasVisible(false);
-    }, 50);
-
     try {
       await authClient.signIn.emailOtp(
         {
@@ -293,6 +298,12 @@ export const useAuthFlow = () => {
         },
         {
           onSuccess: (ctx) => {
+            // Trigger reverse animation on success
+            setReverseCanvasVisible(true);
+            setTimeout(() => {
+              setInitialCanvasVisible(false);
+            }, 50);
+
             // Check if 2FA is required
             if (ctx.data.twoFactorRedirect) {
               // User has 2FA enabled, redirect to 2FA step
