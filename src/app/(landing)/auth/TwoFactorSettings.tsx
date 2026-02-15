@@ -61,6 +61,11 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({
     setDisabling(false);
   };
 
+  // Sync local state with prop changes
+  useEffect(() => {
+    setCurrentlyEnabled(isEnabled);
+  }, [isEnabled]);
+
   // Check if user has a password on mount
   useEffect(() => {
     checkUserPassword();
@@ -163,7 +168,7 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({
       });
 
       // Proceed to 2FA setup
-      handleEnable2FA(pwd);
+      await handleEnable2FA(pwd);
     } catch (error) {
       console.error("Error creating password:", error);
       toast({
@@ -399,7 +404,7 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({
         setIsDialogOpen(true);
       } else {
         // User already has password, proceed to 2FA setup
-        handleEnable2FA();
+        await handleEnable2FA();
       }
     } else {
       // Show password dialog before disabling

@@ -317,6 +317,7 @@ export const useAuthFlow = () => {
               // Reset animations for 2FA step
               setReverseCanvasVisible(false);
               setInitialCanvasVisible(true);
+              setIsSubmitting(false);
             } else {
               // No 2FA, proceed to success
               setTimeout(() => {
@@ -328,6 +329,7 @@ export const useAuthFlow = () => {
                 });
                 setTimeout(() => {
                   router.push("/dash");
+                  setIsSubmitting(false);
                 }, 2000);
               }, 2000);
             }
@@ -343,6 +345,7 @@ export const useAuthFlow = () => {
             setReverseCanvasVisible(false);
             setInitialCanvasVisible(true);
             setCode(["", "", "", "", "", ""]);
+            setIsSubmitting(false);
           },
         }
       );
@@ -357,9 +360,8 @@ export const useAuthFlow = () => {
       setReverseCanvasVisible(false);
       setInitialCanvasVisible(true);
       setCode(["", "", "", "", "", ""]);
+      setIsSubmitting(false);
     }
-
-    setIsSubmitting(false);
   };
 
   // ✅ FIXED: Enhanced 2FA submit with auto-reset on error
