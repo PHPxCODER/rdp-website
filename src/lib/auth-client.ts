@@ -22,15 +22,8 @@ export const authClient = createAuthClient({
   baseURL: process.env.NEXT_PUBLIC_URL || "http://localhost:3000",
 
   plugins: [
-    // 2FA Client Plugin
-    twoFactorClient({
-      // Automatically redirect to 2FA page when 2FA is required
-      onTwoFactorRedirect() {
-        if (typeof window !== "undefined") {
-          window.location.href = "/authflow?step=twoFactor";
-        }
-      },
-    }),
+    // 2FA Client Plugin - no auto-redirect, we handle the flow manually
+    twoFactorClient(),
 
     // Email OTP Client Plugin
     emailOTPClient(),

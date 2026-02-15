@@ -5,10 +5,11 @@ import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 
-export type AuthStep = "email" | "code" | "twoFactor" | "backupCode" | "success";
+export type AuthStep = "email" | "password" | "code" | "twoFactor" | "backupCode" | "success";
 
 export const useAuthFlow = () => {
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [step, setStep] = useState<AuthStep>("email");
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const [twoFactorCode, setTwoFactorCode] = useState(["", "", "", "", "", ""]);
@@ -105,20 +106,20 @@ export const useAuthFlow = () => {
         return;
       }
 
-      // Set user 2FA status
+      // Set user 2FA status for reference
       setUserHas2FA(data.twoFactorEnabled);
       setUserId(data.userId);
 
+      // If user has 2FA enabled, use password + TOTP flow
       if (data.twoFactorEnabled) {
-        // If user has 2FA enabled, go directly to 2FA step
-        setStep("twoFactor");
+        setStep("password");
         toast({
-          title: "2FA Required",
-          description: "Please enter the code from your authenticator app.",
+          title: "Password Required",
+          description: "Please enter your password to continue.",
           variant: "default",
         });
       } else {
-        // Send OTP via Better Auth if no 2FA
+        // No 2FA, use email OTP flow
         const { error } = await authClient.emailOtp.sendVerificationOtp({
           email,
           type: "sign-in",
@@ -134,8 +135,7 @@ export const useAuthFlow = () => {
           setStep("code");
           toast({
             title: "OTP Sent",
-            description:
-              "An OTP has been sent to your email. Please check your inbox.",
+            description: "An OTP has been sent to your email. Please check your inbox.",
             variant: "default",
           });
         }
@@ -194,6 +194,79 @@ export const useAuthFlow = () => {
     }
   };
 
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!password.trim()) {
+      toast({
+        title: "Password Required",
+        description: "Please enter your password.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Sign in with email + password
+      const { data, error } = await authClient.signIn.email({
+        email,
+        password,
+      });
+
+      if (error) {
+        setAttemptCount((prev) => prev + 1);
+        toast({
+          title: "Error",
+          description: error.message || "Invalid password. Please try again.",
+          variant: "destructive",
+        });
+        setPassword("");
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Check if 2FA redirect is needed
+      if (data && 'twoFactorRedirect' in data && data.twoFactorRedirect) {
+        console.log("2FA redirect detected, moving to twoFactor step");
+
+        // User has 2FA enabled, show TOTP step
+        setPassword(""); // Clear password for security
+        setStep("twoFactor");
+
+        toast({
+          title: "2FA Required",
+          description: "Please enter your authenticator code.",
+          variant: "default",
+        });
+      } else if (data) {
+        // Successfully signed in without 2FA
+        setTimeout(() => {
+          setStep("success");
+          toast({
+            title: "Login Successful",
+            description: "You have successfully logged in.",
+            variant: "default",
+          });
+          setTimeout(() => {
+            router.push("/dash");
+          }, 2000);
+        }, 500);
+      }
+    } catch (error) {
+      console.error("Password submit error:", error);
+      setAttemptCount((prev) => prev + 1);
+      toast({
+        title: "Error",
+        description: "An error occurred. Please try again.",
+        variant: "destructive",
+      });
+      setPassword("");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const handleOtpSubmit = async (otpCode: string) => {
     if (attemptCount >= 3) {
       toast({
@@ -212,24 +285,56 @@ export const useAuthFlow = () => {
       setInitialCanvasVisible(false);
     }, 50);
 
-    const { data: session, error } = await authClient.signIn.emailOtp({
-      email,
-      otp: otpCode,
-    });
-
-    if (session && !error) {
-      setTimeout(() => {
-        setStep("success");
-        toast({
-          title: "Login Successful",
-          description: "You have successfully logged in.",
-          variant: "default",
-        });
-        setTimeout(() => {
-          router.push("/dash");
-        }, 2000);
-      }, 2000);
-    } else {
+    try {
+      await authClient.signIn.emailOtp(
+        {
+          email,
+          otp: otpCode,
+        },
+        {
+          onSuccess: (ctx) => {
+            // Check if 2FA is required
+            if (ctx.data.twoFactorRedirect) {
+              // User has 2FA enabled, redirect to 2FA step
+              setStep("twoFactor");
+              toast({
+                title: "2FA Required",
+                description: "Please enter your authenticator code.",
+                variant: "default",
+              });
+              // Reset animations for 2FA step
+              setReverseCanvasVisible(false);
+              setInitialCanvasVisible(true);
+            } else {
+              // No 2FA, proceed to success
+              setTimeout(() => {
+                setStep("success");
+                toast({
+                  title: "Login Successful",
+                  description: "You have successfully logged in.",
+                  variant: "default",
+                });
+                setTimeout(() => {
+                  router.push("/dash");
+                }, 2000);
+              }, 2000);
+            }
+          },
+          onError: () => {
+            setAttemptCount((prev) => prev + 1);
+            toast({
+              title: "Error",
+              description: `Invalid OTP. Attempts left: ${3 - attemptCount - 1}`,
+              variant: "destructive",
+            });
+            // Reset animations on error
+            setReverseCanvasVisible(false);
+            setInitialCanvasVisible(true);
+            setCode(["", "", "", "", "", ""]);
+          },
+        }
+      );
+    } catch {
       setAttemptCount((prev) => prev + 1);
       toast({
         title: "Error",
@@ -407,7 +512,7 @@ export const useAuthFlow = () => {
   };
 
   const handleResendCode = async () => {
-    if (!email.trim() || userHas2FA) return;
+    if (!email.trim()) return;
 
     setIsSubmitting(true);
     try {
@@ -446,6 +551,8 @@ export const useAuthFlow = () => {
     // State
     email,
     setEmail,
+    password,
+    setPassword,
     step,
     code,
     twoFactorCode,
@@ -463,9 +570,10 @@ export const useAuthFlow = () => {
     setIsGithubLoading,
     isCognitoLoading,
     setIsCognitoLoading,
-    
+
     // Handlers
     handleEmailSubmit,
+    handlePasswordSubmit,
     handleCodeChange,
     handleTwoFactorCodeChange,
     handleOtpSubmit,
@@ -478,7 +586,7 @@ export const useAuthFlow = () => {
     handleOtpPaste,
     handleTwoFactorPaste,
     handleResendCode,
-    
+
     // ✅ NEW: Reset function (can be used by components if needed)
     resetTwoFactorInput,
   };

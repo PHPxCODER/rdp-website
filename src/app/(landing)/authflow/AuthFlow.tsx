@@ -5,6 +5,7 @@ import { AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { CanvasBackground, useThemeAwareDotColor } from "./CanvasBackground";
 import { EmailStep } from "./EmailStep";
+import { PasswordStep } from "./PasswordStep";
 import { CodeStep } from "./CodeStep";
 import { TwoFactorStep } from "./TwoFactorStep";
 import { BackupCodeStep } from "./BackupCodeStep";
@@ -21,6 +22,8 @@ export const AuthFlow: React.FC<AuthFlowProps> = ({ className }) => {
     // State
     email,
     setEmail,
+    password,
+    setPassword,
     step,
     code,
     twoFactorCode,
@@ -36,9 +39,10 @@ export const AuthFlow: React.FC<AuthFlowProps> = ({ className }) => {
     setIsGithubLoading,
     isCognitoLoading,
     setIsCognitoLoading,
-    
+
     // Handlers
     handleEmailSubmit,
+    handlePasswordSubmit,
     handleCodeChange,
     handleTwoFactorCodeChange,
     handleOtpSubmit,
@@ -87,6 +91,16 @@ export const AuthFlow: React.FC<AuthFlowProps> = ({ className }) => {
                     setIsGithubLoading={setIsGithubLoading}
                     setIsCognitoLoading={setIsCognitoLoading}
                     onEmailSubmit={handleEmailSubmit}
+                  />
+                )}
+
+                {step === "password" && (
+                  <PasswordStep
+                    password={password}
+                    setPassword={setPassword}
+                    isSubmitting={isSubmitting}
+                    onPasswordSubmit={handlePasswordSubmit}
+                    onBackClick={handleBackClick}
                   />
                 )}
 

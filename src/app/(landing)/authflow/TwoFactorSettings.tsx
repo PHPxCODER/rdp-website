@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -13,9 +13,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Copy, Download, Eye, EyeOff, Shield, ShieldCheck } from "lucide-react";
-import Image from "next/image";
-import { Skeleton } from "@heroui/skeleton";
+import { Copy, Download, Eye, EyeOff, Shield, ShieldCheck, Lock } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+import QRCode from "react-qr-code";
 
 interface TwoFactorSettingsProps {
   isEnabled: boolean;
@@ -25,9 +25,7 @@ interface TwoFactorSettingsProps {
 }
 
 interface SetupData {
-  secret: string;
-  qrCodeUrl: string;
-  manualEntryKey: string;
+  totpURI: string;
   backupCodes: string[];
 }
 
@@ -38,38 +36,101 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({
   onDisable,
 }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [setupStep, setSetupStep] = useState<"setup" | "verify" | "backup">("setup");
+  const [setupStep, setSetupStep] = useState<"password" | "enterPassword" | "setup" | "verify" | "backup">("password");
   const [setupData, setSetupData] = useState<SetupData | null>(null);
   const [verificationCode, setVerificationCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showBackupCodes, setShowBackupCodes] = useState(false);
   const [currentlyEnabled, setCurrentlyEnabled] = useState(isEnabled);
-  const [qrCodeLoaded, setQrCodeLoaded] = useState(false);
+  const [hasPassword, setHasPassword] = useState(false);
+  const [checkingPassword, setCheckingPassword] = useState(true);
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [userPassword, setUserPassword] = useState("");
+  const [disabling, setDisabling] = useState(false);
   const { toast } = useToast();
 
-  const handleEnable2FA = async () => {
-    setIsLoading(true);
-    
+  // Check if user has a password on mount
+  useEffect(() => {
+    checkUserPassword();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const checkUserPassword = async () => {
+    setCheckingPassword(true);
     try {
-      const response = await fetch("/api/2fa/setup", {
+      const response = await fetch("/api/has-password");
+      const data = await response.json();
+      setHasPassword(data.hasPassword);
+    } catch (error) {
+      console.error("Error checking password:", error);
+      toast({
+        title: "Error",
+        description: "Failed to check password status",
+        variant: "destructive",
+      });
+    } finally {
+      setCheckingPassword(false);
+    }
+  };
+
+  const handleCreatePassword = async () => {
+    if (password.length < 8) {
+      toast({
+        title: "Invalid Password",
+        description: "Password must be at least 8 characters long.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      toast({
+        title: "Passwords Don't Match",
+        description: "Please make sure both passwords match.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("/api/set-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error("Failed to setup 2FA");
+        throw new Error(data.error || "Failed to set password");
       }
 
-      const data = await response.json();
-      setSetupData(data);
-      setSetupStep("setup");
-      setQrCodeLoaded(false); // Reset QR code loading state
-      setIsDialogOpen(true);
-    } catch (error) {
-      console.error("2FA setup error:", error);
+      // Update state
+      setHasPassword(true);
+      setUserPassword(password);
+      const pwd = password;
+      setPassword("");
+      setConfirmPassword("");
+
+      // Re-check password status to ensure UI is in sync
+      await checkUserPassword();
+
       toast({
-        title: "Setup Failed",
-        description: error instanceof Error ? error.message : "Failed to initialize 2FA setup. Please try again.",
+        title: data.alreadyExists ? "Password Already Set" : "Password Created",
+        description: "You can now enable two-factor authentication.",
+        variant: "default",
+      });
+
+      // Proceed to 2FA setup
+      handleEnable2FA(pwd);
+    } catch (error) {
+      console.error("Error creating password:", error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to create password. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -77,31 +138,113 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({
     }
   };
 
-  const handleVerify2FA = async () => {
-    if (!verificationCode || !setupData) return;
+  const handleEnterPassword = async () => {
+    if (!userPassword || userPassword.length < 8) {
+      toast({
+        title: "Invalid Password",
+        description: "Please enter your password.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (disabling) {
+      // User is trying to disable 2FA
+      await handleDisable2FA();
+    } else {
+      // User is trying to enable 2FA
+      await handleEnable2FA(userPassword);
+    }
+  };
+
+  const handleEnable2FA = async (pwd?: string) => {
+    // First check if user has a password
+    if (!hasPassword && !pwd) {
+      // User doesn't have a password, show password creation step
+      setSetupStep("password");
+      setIsDialogOpen(true);
+      return;
+    }
+
+    const passwordToUse = pwd || userPassword;
+
+    // If still no password, show enter password dialog
+    if (!passwordToUse) {
+      setDisabling(false);
+      setSetupStep("enterPassword");
+      setIsDialogOpen(true);
+      return;
+    }
 
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/2fa/verify-setup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          secret: setupData.secret,
-          token: verificationCode,
-        }),
+      // Enable 2FA using Better Auth
+      const { data, error } = await authClient.twoFactor.enable({
+        password: passwordToUse,
       });
 
-      if (!response.ok) {
-        throw new Error("Invalid verification code");
+      if (error || !data) {
+        throw new Error(error?.message || "Failed to enable 2FA");
       }
 
+      setSetupData({
+        totpURI: data.totpURI,
+        backupCodes: data.backupCodes,
+      });
+      setSetupStep("setup");
+      setUserPassword("");
+    } catch (error) {
+      console.error("2FA setup error:", error);
+
+      // Clear the password field so user can try again
+      setUserPassword("");
+
+      // Keep the dialog open and show error
+      toast({
+        title: "Setup Failed",
+        description: error instanceof Error ? error.message : "Failed to initialize 2FA setup. Please try again.",
+        variant: "destructive",
+      });
+
+      // Go back to enterPassword step if we're past it
+      if (setupStep !== "enterPassword" && setupStep !== "password") {
+        setSetupStep("enterPassword");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleVerify2FA = async () => {
+    if (!verificationCode || verificationCode.length !== 6) return;
+
+    setIsLoading(true);
+
+    try {
+      // Verify TOTP using Better Auth
+      const { data, error } = await authClient.twoFactor.verifyTotp({
+        code: verificationCode,
+        trustDevice: true,
+      });
+
+      if (error || !data) {
+        throw new Error(error?.message || "Invalid verification code");
+      }
+
+      // After successful verification, 2FA is enabled
+      setCurrentlyEnabled(true);
       setSetupStep("backup");
       toast({
-        title: "Verification Successful",
-        description: "Your authenticator app has been verified successfully.",
+        title: "2FA Enabled Successfully",
+        description: "Your authenticator app has been verified.",
         variant: "default",
       });
+
+      // Call parent callback
+      if (setupData) {
+        onSetupComplete?.("", setupData.backupCodes);
+      }
     } catch (error) {
       console.error("2FA verification error:", error);
       toast({
@@ -109,76 +252,57 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({
         description: error instanceof Error ? error.message : "The code you entered is incorrect. Please try again.",
         variant: "destructive",
       });
+      setVerificationCode("");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleComplete2FASetup = async () => {
-    if (!setupData) return;
+  const handleComplete2FASetup = () => {
+    // Close dialog
+    setIsDialogOpen(false);
+    setSetupStep(hasPassword ? "setup" : "password");
+    setVerificationCode("");
+    setSetupData(null);
+    setUserPassword("");
 
-    setIsLoading(true);
-
-    try {
-      const response = await fetch("/api/2fa/enable", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          secret: setupData.secret,
-          backupCodes: setupData.backupCodes,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to enable 2FA");
-      }
-
-      // Update local state
-      setCurrentlyEnabled(true);
-      setIsDialogOpen(false);
-      setSetupStep("setup");
-      setVerificationCode("");
-      setSetupData(null);
-      
-      // Call the parent callback
-      onSetupComplete?.(setupData.secret, setupData.backupCodes);
-      
-      toast({
-        title: "2FA Enabled",
-        description: "Two-factor authentication has been enabled for your account.",
-        variant: "default",
-      });
-    } catch (error) {
-      console.error("2FA enable error:", error);
-      toast({
-        title: "Setup Failed",
-        description: error instanceof Error ? error.message : "Failed to complete 2FA setup. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    toast({
+      title: "Setup Complete",
+      description: "Two-factor authentication is now protecting your account.",
+      variant: "default",
+    });
   };
 
   const handleDisable2FA = async () => {
+    if (!userPassword) {
+      toast({
+        title: "Password Required",
+        description: "Please enter your password to disable 2FA.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/2fa/disable", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      // Disable 2FA using Better Auth
+      const { error } = await authClient.twoFactor.disable({
+        password: userPassword,
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to disable 2FA");
+      if (error) {
+        throw new Error(error.message || "Failed to disable 2FA");
       }
 
       // Update local state
       setCurrentlyEnabled(false);
-      
+      setUserPassword("");
+      setIsDialogOpen(false);
+
       // Call the parent callback
       onDisable?.();
-      
+
       toast({
         title: "2FA Disabled",
         description: "Two-factor authentication has been disabled for your account.",
@@ -186,6 +310,11 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({
       });
     } catch (error) {
       console.error("2FA disable error:", error);
+
+      // Clear the password field so user can try again
+      setUserPassword("");
+
+      // Keep dialog open with error message
       toast({
         title: "Failed to Disable",
         description: error instanceof Error ? error.message : "Could not disable 2FA. Please try again.",
@@ -218,13 +347,28 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({
     URL.revokeObjectURL(url);
   };
 
-  const handleToggleChange = (checked: boolean) => {
+  const handleToggleChange = async (checked: boolean) => {
     onToggle?.(checked);
-    
+
     if (checked) {
-      handleEnable2FA();
+      // Re-check password status to ensure it's current
+      await checkUserPassword();
+
+      // Check if user has password before enabling
+      if (!hasPassword) {
+        // User needs to create a password first
+        setSetupStep("password");
+        setIsDialogOpen(true);
+      } else {
+        // User already has password, proceed to 2FA setup
+        handleEnable2FA();
+      }
     } else {
-      handleDisable2FA();
+      // Show password dialog before disabling
+      setDisabling(true);
+      setSetupStep("enterPassword");
+      setUserPassword("");
+      setIsDialogOpen(true);
     }
   };
 
@@ -240,11 +384,19 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({
           <div>
             <h3 className="font-medium">Two-Factor Authentication</h3>
             <p className="text-sm text-muted-foreground">
-              Add an extra layer of security to your account
+              {!hasPassword && !checkingPassword
+                ? "Requires password setup before enabling"
+                : "Add an extra layer of security to your account"}
             </p>
           </div>
         </div>
         <div className="flex items-center gap-2">
+          {!hasPassword && !checkingPassword && (
+            <Badge variant="secondary" className="text-amber-600 bg-amber-50 dark:bg-amber-950">
+              <Lock className="w-3 h-3 mr-1" />
+              Password Required
+            </Badge>
+          )}
           {currentlyEnabled && (
             <Badge variant="secondary" className="text-green-600 bg-green-50 dark:bg-green-950">
               Enabled
@@ -253,7 +405,7 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({
           <Switch
             checked={currentlyEnabled}
             onCheckedChange={handleToggleChange}
-            disabled={isLoading}
+            disabled={isLoading || checkingPassword}
           />
         </div>
       </div>
@@ -262,11 +414,15 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>
+              {setupStep === "password" && "Create a Password"}
+              {setupStep === "enterPassword" && (disabling ? "Disable Two-Factor Authentication" : "Enter Your Password")}
               {setupStep === "setup" && "Setup Two-Factor Authentication"}
               {setupStep === "verify" && "Verify Your Setup"}
               {setupStep === "backup" && "Save Your Backup Codes"}
             </DialogTitle>
             <DialogDescription>
+              {setupStep === "password" && "You need a password to enable two-factor authentication"}
+              {setupStep === "enterPassword" && (disabling ? "Enter your password to disable 2FA" : "Enter your password to continue")}
               {setupStep === "setup" && "Scan the QR code with your authenticator app"}
               {setupStep === "verify" && "Enter the 6-digit code from your authenticator app"}
               {setupStep === "backup" && "Store these backup codes in a safe place"}
@@ -274,6 +430,103 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({
           </DialogHeader>
 
           <AnimatePresence mode="wait">
+            {setupStep === "password" && (
+              <motion.div
+                key="password"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                className="space-y-4"
+              >
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">New Password</label>
+                  <input
+                    type="password"
+                    placeholder="Enter password (min. 8 characters)"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                    minLength={8}
+                    autoFocus
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Confirm Password</label>
+                  <input
+                    type="password"
+                    placeholder="Confirm your password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                    minLength={8}
+                  />
+                </div>
+
+                <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+                  <p className="text-xs text-blue-800 dark:text-blue-200">
+                    <strong>Why do I need a password?</strong><br />
+                    Two-factor authentication requires a password for security. You signed in with OAuth, so we need to create one for you.
+                  </p>
+                </div>
+
+                <Button
+                  onClick={handleCreatePassword}
+                  disabled={isLoading || password.length < 8 || password !== confirmPassword}
+                  className="w-full"
+                >
+                  {isLoading ? "Creating..." : "Create Password & Continue"}
+                </Button>
+              </motion.div>
+            )}
+
+            {setupStep === "enterPassword" && (
+              <motion.div
+                key="enterPassword"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                className="space-y-4"
+              >
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Password</label>
+                  <input
+                    type="password"
+                    placeholder="Enter your password"
+                    value={userPassword}
+                    onChange={(e) => setUserPassword(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && userPassword.length >= 8) {
+                        handleEnterPassword();
+                      }
+                    }}
+                    className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                    autoFocus
+                  />
+                </div>
+
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setIsDialogOpen(false);
+                      setUserPassword("");
+                    }}
+                    className="flex-1"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handleEnterPassword}
+                    disabled={isLoading || userPassword.length < 8}
+                    className="flex-1"
+                  >
+                    {isLoading ? "Processing..." : "Continue"}
+                  </Button>
+                </div>
+              </motion.div>
+            )}
+
             {setupStep === "setup" && setupData && (
               <motion.div
                 key="setup"
@@ -282,50 +535,28 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({
                 exit={{ opacity: 0, x: -20 }}
                 className="space-y-4"
               >
-                <div className="flex justify-center p-4 bg-white rounded-lg relative">
-                  {!qrCodeLoaded && (
-                    <Skeleton className="w-48 h-48 rounded-lg" />
-                  )}
-                  <Image 
-                    src={setupData.qrCodeUrl} 
-                    alt="2FA QR Code" 
-                    width={192}
-                    height={192}
-                    className={`transition-opacity duration-200 ${qrCodeLoaded ? 'opacity-100' : 'opacity-0'}`}
-                    onLoad={() => setQrCodeLoaded(true)}
-                    onError={() => {
-                      setQrCodeLoaded(true);
-                      toast({
-                        title: "QR Code Error",
-                        description: "Failed to load QR code. Please use the manual entry key below.",
-                        variant: "destructive",
-                      });
-                    }}
-                    priority
+                <div className="flex justify-center p-6 bg-white rounded-lg border-2 border-gray-200">
+                  <QRCode
+                    value={setupData.totpURI}
+                    size={196}
+                    level="H"
+                    bgColor="#FFFFFF"
+                    fgColor="#000000"
+                    style={{ height: "auto", maxWidth: "100%", width: "196px" }}
                   />
                 </div>
-                
-                <div className="space-y-2">
-                  <p className="text-sm font-medium">Can&apos;t scan the QR code?</p>
-                  <div className="flex items-center gap-2 p-2 bg-muted rounded">
-                    <code className="text-xs flex-1 break-all">
-                      {setupData.manualEntryKey}
-                    </code>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => copyToClipboard(setupData.manualEntryKey)}
-                    >
-                      <Copy className="w-4 h-4" />
-                    </Button>
-                  </div>
+
+                <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+                  <p className="text-xs text-blue-800 dark:text-blue-200">
+                    Scan this QR code with an authenticator app like Google Authenticator, Authy, or 1Password.
+                  </p>
                 </div>
 
-                <Button 
-                  onClick={() => setSetupStep("verify")} 
+                <Button
+                  onClick={() => setSetupStep("verify")}
                   className="w-full"
                 >
-                  Continue
+                  I&apos;ve Scanned the QR Code
                 </Button>
               </motion.div>
             )}
