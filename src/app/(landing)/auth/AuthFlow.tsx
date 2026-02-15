@@ -33,6 +33,8 @@ export const AuthFlow: React.FC<AuthFlowProps> = ({ className }) => {
     initialCanvasVisible,
     reverseCanvasVisible,
     isSubmitting,
+    trustDevice,
+    setTrustDevice,
     isGoogleLoading,
     setIsGoogleLoading,
     isGithubLoading,
@@ -123,6 +125,7 @@ export const AuthFlow: React.FC<AuthFlowProps> = ({ className }) => {
                   <TwoFactorStep
                     code={twoFactorCode}
                     isSubmitting={isSubmitting}
+                    trustDevice={trustDevice}
                     codeInputRefs={twoFactorInputRefs}
                     onCodeChange={handleTwoFactorCodeChange}
                     onKeyDown={(index, e) => handleKeyDown(index, e, true)}
@@ -130,6 +133,7 @@ export const AuthFlow: React.FC<AuthFlowProps> = ({ className }) => {
                     onBackClick={handleBackClick}
                     onTwoFactorSubmit={handleTwoFactorSubmit}
                     onUseBackupCode={handleUseBackupCode}
+                    onTrustDeviceChange={setTrustDevice}
                   />
                 )}
 

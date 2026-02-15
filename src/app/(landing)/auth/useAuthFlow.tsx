@@ -22,6 +22,7 @@ export const useAuthFlow = () => {
   const [initialCanvasVisible, setInitialCanvasVisible] = useState(true);
   const [reverseCanvasVisible, setReverseCanvasVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [trustDevice, setTrustDevice] = useState(true); // Default to true for better UX
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isGithubLoading, setIsGithubLoading] = useState(false);
   const [isCognitoLoading, setIsCognitoLoading] = useState(false);
@@ -373,7 +374,7 @@ export const useAuthFlow = () => {
       // Use Better Auth's 2FA verification
       const { data, error } = await authClient.twoFactor.verifyTotp({
         code: totpCode,
-        trustDevice: true,
+        trustDevice: trustDevice,
       });
 
       if (data && !error) {
@@ -583,6 +584,8 @@ export const useAuthFlow = () => {
     initialCanvasVisible,
     reverseCanvasVisible,
     isSubmitting,
+    trustDevice,
+    setTrustDevice,
     isGoogleLoading,
     setIsGoogleLoading,
     isGithubLoading,

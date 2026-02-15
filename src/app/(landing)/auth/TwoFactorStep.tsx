@@ -7,6 +7,7 @@ import Link from "next/link";
 interface TwoFactorStepProps {
   code: string[];
   isSubmitting: boolean;
+  trustDevice: boolean;
   codeInputRefs: React.MutableRefObject<(HTMLInputElement | null)[]>;
   onCodeChange: (index: number, value: string) => void;
   onKeyDown: (
@@ -20,11 +21,13 @@ interface TwoFactorStepProps {
   onBackClick: () => void;
   onTwoFactorSubmit: (code: string) => void;
   onUseBackupCode: () => void;
+  onTrustDeviceChange: (checked: boolean) => void;
 }
 
 export const TwoFactorStep: React.FC<TwoFactorStepProps> = ({
   code,
   isSubmitting,
+  trustDevice,
   codeInputRefs,
   onCodeChange,
   onKeyDown,
@@ -32,6 +35,7 @@ export const TwoFactorStep: React.FC<TwoFactorStepProps> = ({
   onBackClick,
   onTwoFactorSubmit,
   onUseBackupCode,
+  onTrustDeviceChange,
 }) => {
   return (
     <motion.div
@@ -127,6 +131,23 @@ export const TwoFactorStep: React.FC<TwoFactorStepProps> = ({
             </p>
           </div>
         </div>
+      </div>
+
+      {/* Trust device checkbox */}
+      <div className="flex items-center gap-2">
+        <input
+          id="trust-device"
+          type="checkbox"
+          checked={trustDevice}
+          onChange={(e) => onTrustDeviceChange(e.target.checked)}
+          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 cursor-pointer"
+        />
+        <label
+          htmlFor="trust-device"
+          className="text-sm text-muted-foreground cursor-pointer select-none"
+        >
+          Trust this device for 30 days
+        </label>
       </div>
 
       {/* Backup code option */}
