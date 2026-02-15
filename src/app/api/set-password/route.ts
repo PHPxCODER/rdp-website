@@ -30,7 +30,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const body = await request.json();
+    // Parse request body with error handling for malformed JSON
+    let body;
+    try {
+      body = await request.json();
+    } catch (error) {
+      if (error instanceof SyntaxError) {
+        return NextResponse.json(
+          { error: "Invalid JSON in request body" },
+          { status: 400 }
+        );
+      }
+      throw error;
+    }
 
     // Validate password with Zod
     const validation = passwordSchema.safeParse(body);

@@ -20,7 +20,7 @@ import QRCode from "react-qr-code";
 interface TwoFactorSettingsProps {
   isEnabled: boolean;
   onToggle?: (enabled: boolean) => void;
-  onSetupComplete?: (secret: string, backupCodes: string[]) => void;
+  onSetupComplete?: (backupCodes: string[]) => void;
   onDisable?: () => void;
 }
 
@@ -49,6 +49,17 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({
   const [userPassword, setUserPassword] = useState("");
   const [disabling, setDisabling] = useState(false);
   const { toast } = useToast();
+
+  // Reset all form state when dialog closes
+  const resetSetupState = () => {
+    setSetupStep("password");
+    setUserPassword("");
+    setPassword("");
+    setConfirmPassword("");
+    setVerificationCode("");
+    setSetupData(null);
+    setDisabling(false);
+  };
 
   // Check if user has a password on mount
   useEffect(() => {
@@ -270,7 +281,7 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({
 
       // Call parent callback
       if (setupData) {
-        onSetupComplete?.("", setupData.backupCodes);
+        onSetupComplete?.(setupData.backupCodes);
       }
     } catch (error) {
       console.error("2FA verification error:", error);
@@ -437,7 +448,12 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({
         </div>
       </div>
 
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      <Dialog open={isDialogOpen} onOpenChange={(open) => {
+        setIsDialogOpen(open);
+        if (!open) {
+          resetSetupState();
+        }
+      }}>
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>

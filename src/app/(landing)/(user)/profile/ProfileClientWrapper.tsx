@@ -41,7 +41,7 @@ const ProfileClientWrapper: React.FC<ProfileClientWrapperProps> = ({ user }) => 
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleSetupComplete = async (secret: string, backupCodes: string[]) => {
+  const handleSetupComplete = async (backupCodes: string[]) => {
     toast({
       title: "2FA Setup Complete",
       description:

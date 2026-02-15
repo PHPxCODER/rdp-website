@@ -27,7 +27,7 @@ export const AuthFlow: React.FC<AuthFlowProps> = ({ className }) => {
     step,
     code,
     twoFactorCode,
-    attemptCount,
+    otpAttemptCount,
     codeInputRefs,
     twoFactorInputRefs,
     initialCanvasVisible,
@@ -107,7 +107,7 @@ export const AuthFlow: React.FC<AuthFlowProps> = ({ className }) => {
                 {step === "code" && (
                   <CodeStep
                     code={code}
-                    attemptCount={attemptCount}
+                    otpAttemptCount={otpAttemptCount}
                     isSubmitting={isSubmitting}
                     codeInputRefs={codeInputRefs}
                     onCodeChange={handleCodeChange}

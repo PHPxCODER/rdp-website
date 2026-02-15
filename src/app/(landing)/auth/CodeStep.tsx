@@ -6,7 +6,7 @@ import Link from "next/link";
 
 interface CodeStepProps {
   code: string[];
-  attemptCount: number;
+  otpAttemptCount: number;
   isSubmitting: boolean;
   codeInputRefs: React.MutableRefObject<(HTMLInputElement | null)[]>;
   onCodeChange: (index: number, value: string) => void;
@@ -19,7 +19,7 @@ interface CodeStepProps {
 
 export const CodeStep: React.FC<CodeStepProps> = ({
   code,
-  attemptCount,
+  otpAttemptCount,
   isSubmitting,
   codeInputRefs,
   onCodeChange,
@@ -110,7 +110,7 @@ export const CodeStep: React.FC<CodeStepProps> = ({
         </motion.button>
       </div>
 
-      {attemptCount >= 3 && (
+      {otpAttemptCount >= 3 && (
         <div className="text-red-500 text-center text-sm">
           You have exceeded the maximum number of OTP attempts.
         </div>
@@ -134,13 +134,13 @@ export const CodeStep: React.FC<CodeStepProps> = ({
             }
           }}
           className={`flex-1 rounded-full font-medium py-3 border transition-all duration-300 ${
-            code.every((d) => d !== "") && attemptCount < 3
+            code.every((d) => d !== "") && otpAttemptCount < 3
               ? "bg-foreground text-background border-transparent hover:bg-foreground/90 cursor-pointer"
               : "bg-background text-muted-foreground border-border cursor-not-allowed"
           }`}
-          disabled={!code.every((d) => d !== "") || isSubmitting || attemptCount >= 3}
-          whileHover={code.every((d) => d !== "") && attemptCount < 3 ? { scale: 1.02 } : {}}
-          whileTap={code.every((d) => d !== "") && attemptCount < 3 ? { scale: 0.98 } : {}}
+          disabled={!code.every((d) => d !== "") || isSubmitting || otpAttemptCount >= 3}
+          whileHover={code.every((d) => d !== "") && otpAttemptCount < 3 ? { scale: 1.02 } : {}}
+          whileTap={code.every((d) => d !== "") && otpAttemptCount < 3 ? { scale: 0.98 } : {}}
           transition={{ duration: 0.2 }}
         >
           {isSubmitting ? "Verifying..." : "Continue"}

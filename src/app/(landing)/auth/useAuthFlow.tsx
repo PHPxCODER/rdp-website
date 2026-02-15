@@ -13,7 +13,8 @@ export const useAuthFlow = () => {
   const [step, setStep] = useState<AuthStep>("email");
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const [twoFactorCode, setTwoFactorCode] = useState(["", "", "", "", "", ""]);
-  const [attemptCount, setAttemptCount] = useState(0);
+  const [passwordAttemptCount, setPasswordAttemptCount] = useState(0);
+  const [otpAttemptCount, setOtpAttemptCount] = useState(0);
   const [userHas2FA, setUserHas2FA] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
   const codeInputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -197,7 +198,7 @@ export const useAuthFlow = () => {
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (attemptCount >= 3) {
+    if (passwordAttemptCount >= 3) {
       toast({
         title: "Too Many Attempts",
         description: "You have exceeded the maximum number of attempts. Please try again later.",
@@ -226,7 +227,7 @@ export const useAuthFlow = () => {
       });
 
       if (error) {
-        setAttemptCount((prev) => prev + 1);
+        setPasswordAttemptCount((prev) => prev + 1);
         toast({
           title: "Error",
           description: error.message || "Invalid password. Please try again.",
@@ -266,7 +267,7 @@ export const useAuthFlow = () => {
       }
     } catch (error) {
       console.error("Password submit error:", error);
-      setAttemptCount((prev) => prev + 1);
+      setPasswordAttemptCount((prev) => prev + 1);
       toast({
         title: "Error",
         description: "An error occurred. Please try again.",
@@ -279,7 +280,7 @@ export const useAuthFlow = () => {
   };
 
   const handleOtpSubmit = async (otpCode: string) => {
-    if (attemptCount >= 3) {
+    if (otpAttemptCount >= 3) {
       toast({
         title: "Maximum Attempts Reached",
         description: "You have exceeded the maximum number of OTP attempts.",
@@ -332,10 +333,10 @@ export const useAuthFlow = () => {
             }
           },
           onError: () => {
-            setAttemptCount((prev) => prev + 1);
+            setOtpAttemptCount((prev) => prev + 1);
             toast({
               title: "Error",
-              description: `Invalid OTP. Attempts left: ${3 - attemptCount - 1}`,
+              description: `Invalid OTP. Attempts left: ${3 - otpAttemptCount - 1}`,
               variant: "destructive",
             });
             // Reset animations on error
@@ -346,10 +347,10 @@ export const useAuthFlow = () => {
         }
       );
     } catch {
-      setAttemptCount((prev) => prev + 1);
+      setOtpAttemptCount((prev) => prev + 1);
       toast({
         title: "Error",
-        description: `Invalid OTP. Attempts left: ${3 - attemptCount - 1}`,
+        description: `Invalid OTP. Attempts left: ${3 - otpAttemptCount - 1}`,
         variant: "destructive",
       });
       // Reset animations on error
@@ -483,7 +484,8 @@ export const useAuthFlow = () => {
     setStep("email");
     setCode(["", "", "", "", "", ""]);
     setTwoFactorCode(["", "", "", "", "", ""]);
-    setAttemptCount(0);
+    setPasswordAttemptCount(0);
+    setOtpAttemptCount(0);
     setUserHas2FA(false);
     setUserId(null);
     setReverseCanvasVisible(false);
@@ -545,7 +547,7 @@ export const useAuthFlow = () => {
           variant: "default",
         });
         setCode(["", "", "", "", "", ""]);
-        setAttemptCount(0);
+        setOtpAttemptCount(0);
       }
     } catch (error) {
       toast({
@@ -567,7 +569,8 @@ export const useAuthFlow = () => {
     step,
     code,
     twoFactorCode,
-    attemptCount,
+    otpAttemptCount,
+    passwordAttemptCount,
     userHas2FA,
     userId,
     codeInputRefs,
