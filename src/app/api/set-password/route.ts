@@ -2,6 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
+import { z } from "zod";
+
+const passwordSchema = z.object({
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .max(100, "Password must be less than 100 characters")
+    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+    .regex(/[0-9]/, "Password must contain at least one number"),
+});
 
 export async function POST(request: NextRequest) {
   try {
@@ -18,14 +29,19 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { password } = body;
 
-    if (!password || typeof password !== "string" || password.length < 8) {
+    // Validate password with Zod
+    const validation = passwordSchema.safeParse(body);
+
+    if (!validation.success) {
+      const errors = validation.error.errors.map((err) => err.message);
       return NextResponse.json(
-        { error: "Password must be at least 8 characters" },
+        { error: errors[0] }, // Return first error
         { status: 400 }
       );
     }
+
+    const { password } = validation.data;
 
     // Check if user already has a credential account
     const existingAccount = await prisma.account.findFirst({

@@ -470,6 +470,16 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({
                   </p>
                 </div>
 
+                <div className="text-xs text-muted-foreground space-y-1">
+                  <p className="font-medium">Password requirements:</p>
+                  <ul className="list-disc list-inside space-y-0.5 ml-2">
+                    <li>At least 8 characters</li>
+                    <li>One uppercase letter</li>
+                    <li>One lowercase letter</li>
+                    <li>One number</li>
+                  </ul>
+                </div>
+
                 <Button
                   onClick={handleCreatePassword}
                   disabled={isLoading || password.length < 8 || password !== confirmPassword}
