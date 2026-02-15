@@ -13,11 +13,11 @@ import { buttonVariants } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { transformS3Url } from "@/lib/image-utils";
-import { useSession, signOut } from "next-auth/react";
+import { authClient } from "@/lib/auth-client";
 import { useMemo } from "react";
 
 export function SiteHeader() {
-  const { data: session } = useSession();
+  const { data: session } = authClient.useSession();
   
   // Determine if user has a valid profile image
   const hasValidProfileImage = session?.user?.image && session.user.image !== "";
@@ -141,7 +141,7 @@ export function SiteHeader() {
 
                 {/* Authentication Links */}
                 {session ? (
-                  <DropdownItem key="signout" color="danger" onPress={() => {localStorage.removeItem("hasSeenConfetti"); signOut();}}>
+                  <DropdownItem key="signout" color="danger" onPress={() => {localStorage.removeItem("hasSeenConfetti"); authClient.signOut();}}>
                     Sign Out
                   </DropdownItem>
                 ) : (

@@ -13,20 +13,24 @@ export async function POST(req: NextRequest) {
         id: true,
         email: true,
         twoFactorEnabled: true,
-        twoFactorSecret: true,
+        twoFactor: {
+          select: {
+            secret: true,
+          },
+        },
       }
     });
 
     if (!user) {
-      return NextResponse.json({ 
-        exists: false, 
-        twoFactorEnabled: false 
+      return NextResponse.json({
+        exists: false,
+        twoFactorEnabled: false
       });
     }
 
-    return NextResponse.json({ 
-      exists: true, 
-      twoFactorEnabled: user.twoFactorEnabled && !!user.twoFactorSecret,
+    return NextResponse.json({
+      exists: true,
+      twoFactorEnabled: user.twoFactorEnabled && !!user.twoFactor?.secret,
       userId: user.id
     });
   } catch (error) {

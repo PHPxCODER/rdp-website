@@ -16,10 +16,10 @@ import { useToast } from "@/hooks/use-toast";
 interface User {
   id: string;
   email: string;
-  emailVerified: Date | null;
-  name: string;
+  emailVerified: boolean;
+  name: string | null;
   role: string;
-  phone: string;
+  phone: string | null;
   createdAt: Date;
   updatedAt: Date;
   image: string | null;

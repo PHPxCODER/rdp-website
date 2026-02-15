@@ -1,7 +1,8 @@
 import React from 'react'
 import { Toaster } from "@/components/ui/toaster"
 import { redirect } from "next/navigation"
-import { getServerSession } from "next-auth/next"
+import { auth } from "@/lib/auth"
+import { headers } from "next/headers"
 import SigninForm from './SigninForm'
 import { siteConfig } from "@/config/site";
 
@@ -10,7 +11,7 @@ export const metadata = {
 };
 
 const page = async() => {
-  const session = await getServerSession()
+  const session = await auth.api.getSession({ headers: await headers() })
   if(session){
     redirect('/dash')
   }

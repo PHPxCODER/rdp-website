@@ -1,13 +1,16 @@
 "use client";
 
-import { signOut } from "next-auth/react";
+import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 const SignOutButton = () => {
+  const router = useRouter();
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
     localStorage.removeItem("hasSeenConfetti"); // Clear confetti session flag
-    signOut({ callbackUrl: "/auth" }); // Redirect to auth page after sign out
+    await authClient.signOut(); // Sign out with Better Auth
+    router.push("/auth"); // Redirect to auth page after sign out
   };
 
   return (

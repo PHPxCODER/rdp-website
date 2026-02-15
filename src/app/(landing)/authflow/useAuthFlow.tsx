@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { signIn } from "next-auth/react";
+import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 
@@ -118,17 +118,16 @@ export const useAuthFlow = () => {
           variant: "default",
         });
       } else {
-        // Send OTP via NextAuth if no 2FA
-        const response = await signIn("email", {
+        // Send OTP via Better Auth if no 2FA
+        const { error } = await authClient.emailOtp.sendVerificationOtp({
           email,
-          redirect: false,
-          callbackUrl: "/dash",
+          type: "sign-in",
         });
 
-        if (response?.error) {
+        if (error) {
           toast({
             title: "Error",
-            description: `Failed to send OTP: ${response.error}`,
+            description: `Failed to send OTP: ${error.message}`,
             variant: "destructive",
           });
         } else {
@@ -206,21 +205,19 @@ export const useAuthFlow = () => {
     }
 
     setIsSubmitting(true);
-    
+
     // Trigger reverse animation
     setReverseCanvasVisible(true);
     setTimeout(() => {
       setInitialCanvasVisible(false);
     }, 50);
 
-    const formattedEmail = encodeURIComponent(email.toLowerCase().trim());
-    const formattedCode = encodeURIComponent(otpCode);
-    const formattedCallback = encodeURIComponent("/dash");
-    const otpRequestURL = `/api/auth/callback/email?email=${formattedEmail}&token=${formattedCode}&callbackUrl=${formattedCallback}`;
+    const { data: session, error } = await authClient.signIn.emailOtp({
+      email,
+      otp: otpCode,
+    });
 
-    const response = await fetch(otpRequestURL, { cache: "no-store" });
-
-    if (response.ok) {
+    if (session && !error) {
       setTimeout(() => {
         setStep("success");
         toast({
@@ -253,20 +250,13 @@ export const useAuthFlow = () => {
     setIsSubmitting(true);
 
     try {
-      // Use our custom 2FA callback endpoint that creates proper sessions
-      const response = await fetch("/api/callback/2fa", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          code: totpCode,
-          isBackupCode: false,
-        }),
+      // Use Better Auth's 2FA verification
+      const { data, error } = await authClient.twoFactor.verifyTotp({
+        code: totpCode,
+        trustDevice: true,
       });
 
-      const data = await response.json();
-
-      if (data.valid) {
+      if (data && !error) {
         // ✅ SUCCESS: Trigger animations and redirect
         setReverseCanvasVisible(true);
         setTimeout(() => {
@@ -288,7 +278,7 @@ export const useAuthFlow = () => {
       } else {
         // ✅ ERROR: Reset input and focus first field
         resetTwoFactorInput();
-        
+
         toast({
           title: "Invalid Code",
           description: "The code you entered is invalid. Please try again.",
@@ -297,10 +287,10 @@ export const useAuthFlow = () => {
       }
     } catch (error) {
       console.error("Error verifying 2FA:", error);
-      
+
       // ✅ NETWORK ERROR: Also reset input
       resetTwoFactorInput();
-      
+
       toast({
         title: "Error",
         description: "An error occurred while verifying your code.",
@@ -316,20 +306,12 @@ export const useAuthFlow = () => {
     setIsSubmitting(true);
 
     try {
-      // Use our custom 2FA callback endpoint
-      const response = await fetch("/api/callback/2fa", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          code: backupCode,
-          isBackupCode: true,
-        }),
+      // Use Better Auth's backup code verification
+      const { data, error } = await authClient.twoFactor.verifyBackupCode({
+        code: backupCode,
       });
 
-      const data = await response.json();
-
-      if (data.valid) {
+      if (data && !error) {
         // ✅ SUCCESS: Trigger animations and redirect
         setReverseCanvasVisible(true);
         setTimeout(() => {
@@ -340,7 +322,7 @@ export const useAuthFlow = () => {
           setStep("success");
           toast({
             title: "Backup Code Verified",
-            description: `Login successful. You have ${data.remainingBackupCodes} backup codes remaining.`,
+            description: "Login successful.",
             variant: "default",
           });
           setTimeout(() => {
@@ -426,19 +408,18 @@ export const useAuthFlow = () => {
 
   const handleResendCode = async () => {
     if (!email.trim() || userHas2FA) return;
-    
+
     setIsSubmitting(true);
     try {
-      const response = await signIn("email", {
+      const { error } = await authClient.emailOtp.sendVerificationOtp({
         email,
-        redirect: false,
-        callbackUrl: "/dash",
+        type: "sign-in",
       });
 
-      if (response?.error) {
+      if (error) {
         toast({
           title: "Error",
-          description: `Failed to resend OTP: ${response.error}`,
+          description: `Failed to resend OTP: ${error.message}`,
           variant: "destructive",
         });
       } else {

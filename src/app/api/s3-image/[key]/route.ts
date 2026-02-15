@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { S3Client, GetObjectCommand, HeadObjectCommand } from "@aws-sdk/client-s3";
 import { Readable } from "stream";
-import { getServerSession } from "next-auth/next";
-import { OPTIONS } from "@/auth.config";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { v4 as uuidv4 } from 'uuid'; // For generating request IDs
 
@@ -88,8 +88,8 @@ export async function GET(
 ) {
   try {
     // Get the authenticated user session
-    const session = await getServerSession(OPTIONS);
-    
+    const session = await auth.api.getSession({ headers: await headers() });
+
     // If not authenticated, return 401 Unauthorized
     if (!session || !session.user) {
       return createErrorResponse(401, "Authentication required to access this resource", {
