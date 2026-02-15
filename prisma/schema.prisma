@@ -16,53 +16,55 @@ model Subscriber {
 }
 
 model Account {
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String?
-  access_token      String?
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String?
-  session_state     String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                    String    @id @default(cuid())
+  userId                String
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@id([provider, providerAccountId])
+  @@unique([userId, providerId])
 }
 
 model Session {
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
   id            String          @id @default(uuid())
   email         String          @unique
-  emailVerified DateTime?
+  emailVerified Boolean         @default(false)
   name          String?
   phoneNumber   String?
   role          Role            @default(USER)
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   image         String?
-  
-  // 2FA Fields
+
+  // 2FA - now handled by separate twoFactor table
   twoFactorEnabled Boolean @default(false)
-  twoFactorSecret  String?
-  backupCodes      String[] @default([])
-  
+
   Account       Account[]
   applications  JobApplication?
   Session       Session[]
-  
+  twoFactor     TwoFactor?
+
   @@index([twoFactorEnabled])
 }
 
@@ -95,12 +97,25 @@ model JobApplication {
   job         JobListing @relation(fields: [jobId], references: [id])
 }
 
-model VerificationToken {
-  identifier String
-  token      String
-  expires    DateTime
+model TwoFactor {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  secret      String
+  backupCodes String?  // Encrypted JSON array
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
 
-  @@id([identifier, token])
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([identifier, value])
 }
 
 enum Role {

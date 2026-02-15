@@ -7,7 +7,7 @@ import {GradientBackground} from "@/components/ui/GradientBackground";
 import GreetingMessage from "@/components/ui/GreetingMessage";
 import { ConfettiFireworks } from "@/components/ui/Confetti";
 import { Button } from "@/components/ui/button";
-import { TwoFactorSettings } from "../../authflow/TwoFactorSettings";
+import { TwoFactorSettings } from "../../auth/TwoFactorSettings";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { Shield, User, Settings } from "lucide-react";
@@ -16,10 +16,10 @@ import { useToast } from "@/hooks/use-toast";
 interface User {
   id: string;
   email: string;
-  emailVerified: Date | null;
-  name: string;
+  emailVerified: boolean;
+  name: string | null;
   role: string;
-  phone: string;
+  phone: string | null;
   createdAt: Date;
   updatedAt: Date;
   image: string | null;
@@ -41,7 +41,7 @@ const ProfileClientWrapper: React.FC<ProfileClientWrapperProps> = ({ user }) => 
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleSetupComplete = async (secret: string, backupCodes: string[]) => {
+  const handleSetupComplete = async (backupCodes: string[]) => {
     toast({
       title: "2FA Setup Complete",
       description:

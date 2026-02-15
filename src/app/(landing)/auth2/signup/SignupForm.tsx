@@ -1,7 +1,7 @@
 "use client"
 import Link from "next/link"
 import { useState } from "react"
-import { signIn } from "next-auth/react"
+import { authClient } from "@/lib/auth-client"
 import { useToast } from "@/hooks/use-toast"
 import { Button } from "@heroui/react"
 import {
@@ -14,7 +14,6 @@ import {
 import { GradientBackground } from "@/components/ui/GradientBackground"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useRouter } from "next/navigation"
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { RiLoginCircleLine } from "react-icons/ri";
@@ -24,7 +23,6 @@ export const description =
 
 export function SignupForm() {
   const { toast } = useToast()
-  const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isGoogleLoading, setIsGoogleLoading] = useState(false)
   const [isGithubLoading, setIsGithubLoading] = useState(false)
@@ -48,46 +46,43 @@ export function SignupForm() {
 
   const handleGoogleSignIn = async () => {
     setIsGoogleLoading(true)
-    const result = await signIn("google", { callbackUrl: "/dash", redirect: false })
-    if (result?.error) {
+    try {
+      await authClient.signIn.social({ provider: "google", callbackURL: "/dash" })
+    } catch {
       toast({
         title: "Google OAuth Error",
         description: "There was an issue signing in with Google. Please try again.",
         variant: "destructive",
       })
       setIsGoogleLoading(false)
-    } else if (result?.url) {
-      router.push(result.url)
     }
   }
 
   const handleGithubSignIn = async () => {
     setIsGithubLoading(true)
-    const result = await signIn("github", { callbackUrl: "/dash", redirect: false })
-    if (result?.error) {
+    try {
+      await authClient.signIn.social({ provider: "github", callbackURL: "/dash" })
+    } catch {
       toast({
         title: "Github OAuth Error",
         description: "There was an issue signing in with Github. Please try again.",
         variant: "destructive",
       })
       setIsGithubLoading(false)
-    } else if (result?.url) {
-      router.push(result.url)
     }
   }
 
   const handleCognitoSignIn = async () => {
     setIsCognitoLoading(true)
-    const result = await signIn("cognito", { callbackUrl: "/dash", redirect: false })
-    if (result?.error) {
+    try {
+      await authClient.signIn.social({ provider: "cognito", callbackURL: "/dash" })
+    } catch {
       toast({
         title: "RDP SSO Error",
         description: "There was an issue signing in with RDP SSO. Please try again.",
         variant: "destructive",
       })
       setIsCognitoLoading(false)
-    } else if (result?.url) {
-      router.push(result.url)
     }
   }
 

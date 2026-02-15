@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { signIn } from "next-auth/react"
+import { authClient } from "@/lib/auth-client"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -128,14 +128,17 @@ export function SigninForm() {
         setIsSubmitting(false)
         return
       }
-  
-      // If the user exists, send the OTP via NextAuth sign-in
-      const response = await signIn("email", { email, redirect: false, callbackUrl: "/dash" })
-  
-      if (response?.error) {
+
+      // If the user exists, send the OTP via Better Auth
+      const { error } = await authClient.emailOtp.sendVerificationOtp({
+        email,
+        type: "sign-in",
+      })
+
+      if (error) {
         toast({
           title: "Error",
-          description: `Failed to send OTP: ${response.error}`,
+          description: `Failed to send OTP: ${error.message}`,
           variant: "destructive",
         })
       } else {
@@ -170,77 +173,94 @@ export function SigninForm() {
     }
 
     setIsSubmitting(true)
-    const formattedEmail = encodeURIComponent(email.toLowerCase().trim())
-    const formattedCode = encodeURIComponent(data.pin)
-    const formattedCallback = encodeURIComponent('/dash')
-    const otpRequestURL = `/api/auth/callback/email?email=${formattedEmail}&token=${formattedCode}&callbackUrl=${formattedCallback}`
-    
-    const response = await fetch(otpRequestURL, { cache: "no-store" })
 
-    if (response.ok) {
-      router.push('/dash')
-      toast({
-        title: "Login Successful",
-        description: "You have successfully logged in.",
-        variant: "default",
+    try {
+      const { data: session, error } = await authClient.signIn.emailOtp({
+        email,
+        otp: data.pin,
       })
-    } else {
-      setAttemptCount((prev) => prev + 1) // Increment attempt count on failure
+
+      if (error) {
+        setAttemptCount((prev) => prev + 1) // Increment attempt count on failure
+        toast({
+          title: "Error",
+          description: `Invalid OTP. Attempts left: ${3 - attemptCount - 1}`,
+          variant: "destructive",
+        })
+      } else if (session) {
+        // Check if 2FA is required
+        if ('twoFactorRedirect' in session && session.twoFactorRedirect) {
+          // Redirect to 2FA page
+          router.push('/auth?step=twoFactor')
+          toast({
+            title: "2FA Required",
+            description: "Please enter your authenticator code.",
+            variant: "default",
+          })
+        } else {
+          // No 2FA, proceed to dashboard
+          router.push('/dash')
+          toast({
+            title: "Login Successful",
+            description: "You have successfully logged in.",
+            variant: "default",
+          })
+        }
+      }
+    } catch {
+      setAttemptCount((prev) => prev + 1)
       toast({
         title: "Error",
-        description: `Invalid OTP. Attempts left: ${3 - attemptCount - 1}`,
+        description: "An unexpected error occurred. Please try again.",
         variant: "destructive",
       })
+    } finally {
+      setIsSubmitting(false)
     }
-
-    setIsSubmitting(false)
   }
 
   // Function to handle Google sign-in
   const handleGoogleSignIn = async () => {
     setIsGoogleLoading(true)
-    const result = await signIn("google", { callbackUrl: "/dash", redirect: false })
-    if (result?.error) {
+    try {
+      await authClient.signIn.social({ provider: "google", callbackURL: "/dash" })
+    } catch {
       toast({
         title: "Google OAuth Error",
         description: "There was an issue signing in with Google. Please try again.",
         variant: "destructive",
       })
       setIsGoogleLoading(false)
-    } else if (result?.url) {
-      router.push(result.url)
     }
   }
 
   // Function to handle Github sign-in
   const handleGithubSignIn = async () => {
     setIsGithubLoading(true)
-    const result = await signIn("github", { callbackUrl: "/dash", redirect: false })
-    if (result?.error) {
+    try {
+      await authClient.signIn.social({ provider: "github", callbackURL: "/dash" })
+    } catch {
       toast({
         title: "GitHub OAuth Error",
         description: "There was an issue signing in with GitHub. Please try again.",
         variant: "destructive",
       })
       setIsGithubLoading(false)
-    } else if (result?.url) {
-      router.push(result.url)
     }
   }
 
   // Function to handle AWS Cognito sign-in
   const handleCognitoSignIn = async () => {
     setIsCognitoLoading(true)
-    const result = await signIn("cognito", { callbackUrl: "/dash", redirect: false })
-    if (result?.error) {
+    try {
+      await authClient.signIn.social({ provider: "cognito", callbackURL: "/dash" })
+    } catch {
       toast({
         title: "RDP SSO Error",
         description: "There was an issue signing in with RDP SSO. Please try again.",
         variant: "destructive",
       })
       setIsCognitoLoading(false)
-    } else if (result?.url) {
-      router.push(result.url)
     }
   }
 

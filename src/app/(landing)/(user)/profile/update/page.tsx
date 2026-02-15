@@ -1,8 +1,9 @@
 import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth/next";
-import { OPTIONS } from "@/auth.config";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { prisma } from "@/lib/prisma";
 import { siteConfig } from "@/config/site";
 import UpdateProfileForm from './UpdateProfileForm';
 
@@ -11,26 +12,41 @@ export const metadata = {
 };
 
 const UpdateProfilePage = async() => {
-  const session = await getServerSession(OPTIONS);
-  
+  const session = await auth.api.getSession({ headers: await headers() });
+
   if (!session) {
     redirect('/auth');
   }
-  
+
   if (!session.user?.id) {
     redirect('/dash');
+  }
+
+  // Fetch full user data from database
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: {
+      id: true,
+      name: true,
+      phoneNumber: true,
+      image: true,
+    },
+  });
+
+  if (!user) {
+    redirect('/auth');
   }
 
   return (
     <>
       <br/>
-      <UpdateProfileForm 
+      <UpdateProfileForm
         initialData={{
-          name: session.user.name || "",
-          phone: session.user.phone || "",
-          image: session.user.image || ""
+          name: user.name || "",
+          phone: user.phoneNumber || "",
+          image: user.image || ""
         }}
-        userId={session.user.id}
+        userId={user.id}
       />
       <Toaster />
     </>

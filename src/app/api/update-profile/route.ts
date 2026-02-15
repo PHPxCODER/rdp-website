@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { generateUploadUrl } from "@/lib/s3";
-import { getServerSession } from "next-auth/next";
-import { OPTIONS } from "@/auth.config";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 export async function POST(req: NextRequest) {
   try {
     // Get authenticated user
-    const session = await getServerSession(OPTIONS);
+    const session = await auth.api.getSession({ headers: await headers() });
     if (!session || !session.user) {
       return NextResponse.json(
         { message: "Unauthorized" },

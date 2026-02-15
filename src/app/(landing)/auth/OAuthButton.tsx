@@ -2,8 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
 import { useToast } from "@/hooks/use-toast";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
@@ -27,53 +26,49 @@ export const OAuthButtons: React.FC<OAuthButtonsProps> = ({
   setIsCognitoLoading,
 }) => {
   const { toast } = useToast();
-  const router = useRouter();
 
   // Function to handle Google sign-in
   const handleGoogleSignIn = async () => {
     setIsGoogleLoading(true);
-    const result = await signIn("google", { callbackUrl: "/dash", redirect: false });
-    if (result?.error) {
+    try {
+      await authClient.signIn.social({ provider: "google", callbackURL: "/dash" });
+    } catch {
       toast({
         title: "Google OAuth Error",
         description: "There was an issue signing in with Google. Please try again.",
         variant: "destructive",
       });
       setIsGoogleLoading(false);
-    } else if (result?.url) {
-      router.push(result.url);
     }
   };
 
   // Function to handle Github sign-in
   const handleGithubSignIn = async () => {
     setIsGithubLoading(true);
-    const result = await signIn("github", { callbackUrl: "/dash", redirect: false });
-    if (result?.error) {
+    try {
+      await authClient.signIn.social({ provider: "github", callbackURL: "/dash" });
+    } catch {
       toast({
         title: "GitHub OAuth Error",
         description: "There was an issue signing in with GitHub. Please try again.",
         variant: "destructive",
       });
       setIsGithubLoading(false);
-    } else if (result?.url) {
-      router.push(result.url);
     }
   };
 
   // Function to handle AWS Cognito sign-in
   const handleCognitoSignIn = async () => {
     setIsCognitoLoading(true);
-    const result = await signIn("cognito", { callbackUrl: "/dash", redirect: false });
-    if (result?.error) {
+    try {
+      await authClient.signIn.social({ provider: "cognito", callbackURL: "/dash" });
+    } catch {
       toast({
         title: "RDP SSO Error",
         description: "There was an issue signing in with RDP SSO. Please try again.",
         variant: "destructive",
       });
       setIsCognitoLoading(false);
-    } else if (result?.url) {
-      router.push(result.url);
     }
   };
 
