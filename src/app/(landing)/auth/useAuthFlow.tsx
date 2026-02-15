@@ -251,6 +251,7 @@ export const useAuthFlow = () => {
           description: "Please enter your authenticator code.",
           variant: "default",
         });
+        setIsSubmitting(false);
       } else if (data) {
         // Successfully signed in without 2FA
         setTimeout(() => {
@@ -262,6 +263,7 @@ export const useAuthFlow = () => {
           });
           setTimeout(() => {
             router.push("/dash");
+            setIsSubmitting(false);
           }, 2000);
         }, 500);
       }
@@ -274,7 +276,6 @@ export const useAuthFlow = () => {
         variant: "destructive",
       });
       setPassword("");
-    } finally {
       setIsSubmitting(false);
     }
   };
@@ -392,6 +393,7 @@ export const useAuthFlow = () => {
           setTimeout(() => {
             // Force a hard redirect to ensure session is picked up
             window.location.href = "/dash";
+            setIsSubmitting(false);
           }, 2000);
         }, 2000);
       } else {
@@ -403,6 +405,7 @@ export const useAuthFlow = () => {
           description: "The code you entered is invalid. Please try again.",
           variant: "destructive",
         });
+        setIsSubmitting(false);
       }
     } catch (error) {
       console.error("Error verifying 2FA:", error);
@@ -415,7 +418,6 @@ export const useAuthFlow = () => {
         description: "An error occurred while verifying your code.",
         variant: "destructive",
       });
-    } finally {
       setIsSubmitting(false);
     }
   };
@@ -447,6 +449,7 @@ export const useAuthFlow = () => {
           setTimeout(() => {
             // Force a hard redirect to ensure session is picked up
             window.location.href = "/dash";
+            setIsSubmitting(false);
           }, 2000);
         }, 2000);
       } else {
@@ -456,6 +459,7 @@ export const useAuthFlow = () => {
           description: "The backup code you entered is invalid or has already been used.",
           variant: "destructive",
         });
+        setIsSubmitting(false);
       }
     } catch (error) {
       console.error("Error verifying backup code:", error);
@@ -464,7 +468,6 @@ export const useAuthFlow = () => {
         description: "An error occurred while verifying your backup code.",
         variant: "destructive",
       });
-    } finally {
       setIsSubmitting(false);
     }
   };

@@ -76,6 +76,17 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({
     setCheckingPassword(true);
     try {
       const response = await fetch("/api/has-password");
+
+      if (!response.ok) {
+        console.error("Failed to check password status:", response.status);
+        toast({
+          title: "Error",
+          description: "Failed to check password status",
+          variant: "destructive",
+        });
+        return;
+      }
+
       const data = await response.json();
       setHasPassword(data.hasPassword);
     } catch (error) {
@@ -368,13 +379,22 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({
     }
   };
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    toast({
-      title: "Copied",
-      description: "Copied to clipboard",
-      variant: "default",
-    });
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({
+        title: "Copied",
+        description: "Copied to clipboard",
+        variant: "default",
+      });
+    } catch (error) {
+      console.error("Failed to copy to clipboard:", error);
+      toast({
+        title: "Copy Failed",
+        description: "Failed to copy to clipboard. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const downloadBackupCodes = () => {
@@ -487,8 +507,9 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({
                 className="space-y-4"
               >
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">New Password</label>
+                  <label htmlFor="new-password" className="text-sm font-medium">New Password</label>
                   <input
+                    id="new-password"
                     type="password"
                     placeholder="Enter password (min. 8 characters)"
                     value={password}
@@ -500,8 +521,9 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Confirm Password</label>
+                  <label htmlFor="confirm-password" className="text-sm font-medium">Confirm Password</label>
                   <input
+                    id="confirm-password"
                     type="password"
                     placeholder="Confirm your password"
                     value={confirmPassword}
@@ -554,8 +576,9 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({
                 className="space-y-4"
               >
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Password</label>
+                  <label htmlFor="user-password" className="text-sm font-medium">Password</label>
                   <input
+                    id="user-password"
                     type="password"
                     placeholder="Enter your password"
                     value={userPassword}
@@ -635,8 +658,9 @@ export const TwoFactorSettings: React.FC<TwoFactorSettingsProps> = ({
                 className="space-y-4"
               >
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Verification Code</label>
+                  <label htmlFor="verification-code" className="text-sm font-medium">Verification Code</label>
                   <input
+                    id="verification-code"
                     type="text"
                     placeholder="000000"
                     value={verificationCode}
