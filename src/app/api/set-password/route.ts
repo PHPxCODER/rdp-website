@@ -4,6 +4,8 @@ import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
+export const dynamic = 'force-dynamic';
+
 const passwordSchema = z.object({
   password: z
     .string()
@@ -43,34 +45,47 @@ export async function POST(request: NextRequest) {
 
     const { password } = validation.data;
 
-    // Check if user already has a credential account
-    const existingAccount = await prisma.account.findFirst({
-      where: {
-        userId: session.user.id,
-        providerId: "credential",
-        password: {
-          not: null,
+    // Use Better Auth's setPassword API to properly hash and store the password
+    // This handles password creation atomically
+    try {
+      await auth.api.setPassword({
+        body: {
+          newPassword: password,
         },
-      },
-    });
+        headers: await headers(),
+      });
 
-    if (existingAccount) {
-      // User already has a password, just return success
+      // Check if this was a new password or if one already existed
+      const credentialAccount = await prisma.account.findFirst({
+        where: {
+          userId: session.user.id,
+          providerId: "credential",
+          password: {
+            not: null,
+          },
+        },
+      });
+
       return NextResponse.json({
         success: true,
-        alreadyExists: true
+        alreadyExists: credentialAccount !== null
       });
+    } catch (error: unknown) {
+      // If setPassword fails because password already exists, treat as success
+      const errorMessage = error instanceof Error ? error.message : "";
+      const errorStatus = typeof error === "object" && error !== null && "status" in error ? (error as { status: number }).status : undefined;
+
+      if (errorMessage.includes("already has a password") ||
+          errorMessage.includes("credential") ||
+          errorStatus === 400) {
+        return NextResponse.json({
+          success: true,
+          alreadyExists: true
+        });
+      }
+      // Re-throw unexpected errors
+      throw error;
     }
-
-    // Use Better Auth's setPassword API to properly hash and store the password
-    await auth.api.setPassword({
-      body: {
-        newPassword: password,
-      },
-      headers: await headers(),
-    });
-
-    return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error setting password:", error);
     return NextResponse.json(

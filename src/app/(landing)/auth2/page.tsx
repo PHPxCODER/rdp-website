@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { redirect } from "next/navigation"
 import { auth } from "@/lib/auth"
 import { headers } from "next/headers"
-import { AuthFlow } from './AuthFlow'
+import SigninForm from './SigninForm'
 import { siteConfig } from "@/config/site";
 
 export const metadata = {
@@ -17,8 +17,9 @@ const page = async() => {
   }
   return (
     <>
-      <AuthFlow />
-      <Toaster />
+    <br/>
+    <SigninForm />
+    <Toaster />
     </>
   )
 }

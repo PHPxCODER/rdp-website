@@ -7,7 +7,7 @@ import {GradientBackground} from "@/components/ui/GradientBackground";
 import GreetingMessage from "@/components/ui/GreetingMessage";
 import { ConfettiFireworks } from "@/components/ui/Confetti";
 import { Button } from "@/components/ui/button";
-import { TwoFactorSettings } from "../../authflow/TwoFactorSettings";
+import { TwoFactorSettings } from "../../auth/TwoFactorSettings";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { Shield, User, Settings } from "lucide-react";

@@ -174,28 +174,49 @@ export function SigninForm() {
 
     setIsSubmitting(true)
 
-    const { data: session, error } = await authClient.signIn.emailOtp({
-      email,
-      otp: data.pin,
-    })
+    try {
+      const { data: session, error } = await authClient.signIn.emailOtp({
+        email,
+        otp: data.pin,
+      })
 
-    if (error) {
-      setAttemptCount((prev) => prev + 1) // Increment attempt count on failure
+      if (error) {
+        setAttemptCount((prev) => prev + 1) // Increment attempt count on failure
+        toast({
+          title: "Error",
+          description: `Invalid OTP. Attempts left: ${3 - attemptCount - 1}`,
+          variant: "destructive",
+        })
+      } else if (session) {
+        // Check if 2FA is required
+        if ('twoFactorRedirect' in session && session.twoFactorRedirect) {
+          // Redirect to 2FA page
+          router.push('/auth?step=twoFactor')
+          toast({
+            title: "2FA Required",
+            description: "Please enter your authenticator code.",
+            variant: "default",
+          })
+        } else {
+          // No 2FA, proceed to dashboard
+          router.push('/dash')
+          toast({
+            title: "Login Successful",
+            description: "You have successfully logged in.",
+            variant: "default",
+          })
+        }
+      }
+    } catch {
+      setAttemptCount((prev) => prev + 1)
       toast({
         title: "Error",
-        description: `Invalid OTP. Attempts left: ${3 - attemptCount - 1}`,
+        description: "An unexpected error occurred. Please try again.",
         variant: "destructive",
       })
-    } else if (session) {
-      router.push('/dash')
-      toast({
-        title: "Login Successful",
-        description: "You have successfully logged in.",
-        variant: "default",
-      })
+    } finally {
+      setIsSubmitting(false)
     }
-
-    setIsSubmitting(false)
   }
 
   // Function to handle Google sign-in

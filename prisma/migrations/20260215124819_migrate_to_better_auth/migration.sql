@@ -31,7 +31,7 @@ SELECT
     gen_random_uuid()::text,
     "id",
     "twoFactorSecret",
-    array_to_string("backupCodes", ','),
+    "backupCodes",
     CURRENT_TIMESTAMP,
     CURRENT_TIMESTAMP
 FROM "User"

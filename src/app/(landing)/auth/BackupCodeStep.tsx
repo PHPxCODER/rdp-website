@@ -27,11 +27,14 @@ export const BackupCodeStep: React.FC<BackupCodeStepProps> = ({
   };
 
   const formatBackupCode = (value: string) => {
-    // Remove all non-alphanumeric characters and convert to uppercase
-    const cleaned = value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
-    
-    // Add space every 4 characters for readability
-    return cleaned.replace(/(.{4})/g, '$1 ').trim();
+    // Remove all non-alphanumeric characters
+    const cleaned = value.replace(/[^a-zA-Z0-9]/g, '');
+
+    // Format as XXXXX-XXXXX (Better Auth format)
+    if (cleaned.length <= 5) {
+      return cleaned;
+    }
+    return `${cleaned.slice(0, 5)}-${cleaned.slice(5, 10)}`;
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,10 +64,10 @@ export const BackupCodeStep: React.FC<BackupCodeStepProps> = ({
         <div className="w-full">
           <input
             type="text"
-            placeholder="XXXX XXXX"
+            placeholder="XXXXX-XXXXX"
             value={backupCode}
             onChange={handleInputChange}
-            maxLength={9} // 8 characters + 1 space
+            maxLength={11} // 10 characters + 1 hyphen
             className="w-full text-center text-2xl font-mono tracking-wider bg-transparent text-foreground border border-border rounded-lg py-4 px-4 focus:outline-none focus:border-foreground/50 focus:ring-0"
             autoFocus
             required
