@@ -7,6 +7,7 @@ import { Skeleton } from "@heroui/skeleton";
 import { EarthIcon } from "@/components/ui/earth";
 import { GithubIcon } from "@/components/ui/github";
 import { AudioLinesIcon } from "@/components/ui/audio-lines";
+import { BehanceIcon } from "@/components/ui/behance";
 import { LinkedinIcon } from "@/components/ui/linkedin";
 import { team, TeamMember } from "@/config/team";
 import { useState, useEffect } from "react";
@@ -152,6 +153,11 @@ function TeamMemberCard({ member, loading }: TeamMemberCardProps) {
                         {member.soundcloud && (
                             <Button isIconOnly variant="light" href={member.soundcloud} target="_blank" as="a">
                                 <AudioLinesIcon size={18} />
+                            </Button>
+                        )}
+                        {member.behance && (
+                            <Button isIconOnly variant="light" href={member.behance} target="_blank" as="a">
+                                <BehanceIcon size={18} />
                             </Button>
                         )}
                         {member.website && (

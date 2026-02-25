@@ -8,6 +8,7 @@ import { useLanyard } from "react-use-phplanyard";
 import { EarthIcon } from "@/components/ui/earth";
 import { GithubIcon } from "@/components/ui/github";
 import { AudioLinesIcon } from "@/components/ui/audio-lines";
+import { BehanceIcon } from "@/components/ui/behance";
 import { LinkedinIcon } from "@/components/ui/linkedin";
 import { ArrowLeftIcon, MapPinIcon } from "lucide-react";
 import Link from "next/link";
@@ -150,6 +151,11 @@ export default function TeamMemberDetail({ member }: TeamMemberDetailProps) {
                       <AudioLinesIcon size={18} />
                     </Button>
                   )}
+                  {member.behance && (
+                    <Button isIconOnly variant="light" href={member.behance} target="_blank" as="a">
+                      <BehanceIcon size={18} />
+                    </Button>
+                  )}
                   {member.website && (
                     <Button isIconOnly variant="light" href={member.website} target="_blank" as="a">
                       <EarthIcon size={18} />
@@ -256,6 +262,8 @@ export default function TeamMemberDetail({ member }: TeamMemberDetailProps) {
                 <Skeleton className="h-9 w-full rounded-lg" />
                 <Skeleton className="h-9 w-full rounded-lg" />
                 <Skeleton className="h-9 w-full rounded-lg" />
+                <Skeleton className="h-9 w-full rounded-lg" />
+                <Skeleton className="h-9 w-full rounded-lg" />
               </div>
             </>
           ) : (
@@ -263,17 +271,27 @@ export default function TeamMemberDetail({ member }: TeamMemberDetailProps) {
               <h2 className="text-xl font-semibold mb-4">Connect</h2>
               <div className="space-y-3">
                 {member.linkedin && (
-                  <Button color="primary" as="a" href={member.linkedin} target="_blank" className="w-full" variant="flat">
+                  <Button as="a" href={member.linkedin} target="_blank" variant="flat" className="w-full bg-[#0A66C2]/10 text-[#0A66C2] hover:bg-[#0A66C2]/20 dark:bg-[#0A66C2]/20 dark:hover:bg-[#0A66C2]/30" endContent={<LinkedinIcon size={16} className="p-0 hover:bg-transparent" />}>
                     Connect on LinkedIn
                   </Button>
                 )}
                 {member.github && (
-                  <Button color="default" as="a" href={member.github} target="_blank" className="w-full" variant="flat">
+                  <Button as="a" href={member.github} target="_blank" variant="flat" className="w-full bg-[#24292e]/10 text-[#24292e] hover:bg-[#24292e]/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/20" endContent={<GithubIcon size={16} className="p-0 hover:bg-transparent" />}>
                     Follow on GitHub
                   </Button>
                 )}
+                {member.soundcloud && (
+                  <Button as="a" href={member.soundcloud} target="_blank" variant="flat" className="w-full bg-[#FF5500]/10 text-[#FF5500] hover:bg-[#FF5500]/20 dark:bg-[#FF5500]/20 dark:hover:bg-[#FF5500]/30" endContent={<AudioLinesIcon size={16} className="p-0 hover:bg-transparent" />}>
+                    Listen on SoundCloud
+                  </Button>
+                )}
+                {member.behance && (
+                  <Button as="a" href={member.behance} target="_blank" variant="flat" className="w-full bg-[#1769FF]/10 text-[#1769FF] hover:bg-[#1769FF]/20 dark:bg-[#1769FF]/20 dark:hover:bg-[#1769FF]/30" endContent={<BehanceIcon size={16} className="p-0 hover:bg-transparent" />}>
+                    View on Behance
+                  </Button>
+                )}
                 {member.website && (
-                  <Button color="secondary" as="a" href={member.website} target="_blank" className="w-full" variant="flat">
+                  <Button as="a" href={member.website} target="_blank" variant="flat" className="w-full bg-purple-500/10 text-purple-500 hover:bg-purple-500/20 dark:bg-purple-500/20 dark:hover:bg-purple-500/30" endContent={<EarthIcon size={16} className="p-0 hover:bg-transparent" />}>
                     Visit Website
                   </Button>
                 )}
