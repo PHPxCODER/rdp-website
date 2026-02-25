@@ -57,7 +57,7 @@ export const team = [
       name: "Siddharth Kallo",
       role: "Graphic Designer",
       image: "https://res.cloudinary.com/ddvheihbd/image/upload/v1772048813/reflect.jpg",
-      linkedin: "https://www.linkedin.com/in/arjungho/",
+      linkedin: "https://www.linkedin.com/in/siddharth-kallo/",
       behance: "https://www.behance.net/siddharthkallo",
       discordid: "729699196050997250",
     },
@@ -128,10 +128,10 @@ export const teamMemberDetails: Record<string, {
   "Siddharth Kallo": {
     description: "I am a Graphic Designer and Video Editor with 2 years of experience, specializing in logo design, product packaging, label design, and brand identity. I create clean, impactful visuals across print and digital platforms, supported by strong video editing skills to deliver cohesive and engaging content.",
     achievements: [
-      "Secured Series A funding to expand our data center footprint",
-      "Developed our tiered pricing strategy that increased profitability by 35%",
-      "Led our expansion into emerging markets",
-      "Implemented financial systems that support our rapid scaling"
+      "Designed logos, branding, and packaging improving brand appeal",
+      "Created Instagram creatives for social media brands",
+      "Delivered end-to-end design projects on time",
+      "Applied professional color grading for polished video output"
     ],
     skills: [
       "Adobe Photoshop", "Adobe Illustrator", "DaVinci Resolve", "Adobe Premiere Pro", "Adobe InDesign", "Canva Pro", "Lightroom", "Mockup & Presentation Design"
